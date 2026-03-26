@@ -8,17 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#050505;
-  --bg2:#0a0a0a;
-  --sur:#0f0f0f;
-  --brd:rgba(255,255,255,.07);
-  --brd2:rgba(255,255,255,.14);
-  --txt:#f0ece4;
-  --txt2:#b8b0a4;
-  --mut:rgba(240,236,228,.38);
-  --ch:#b8955a;
-  --chl:#d4b07a;
-  --chd:#8a6e3e;
+  --bg:#050505;--bg2:#0a0a0a;--sur:#0f0f0f;
+  --brd:rgba(255,255,255,.07);--brd2:rgba(255,255,255,.14);
+  --txt:#f0ece4;--txt2:#b8b0a4;--mut:rgba(240,236,228,.38);
+  --ch:#b8955a;--chl:#d4b07a;--chd:#8a6e3e;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -26,19 +19,26 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;font-
 a{text-decoration:none;color:inherit}
 button{font-family:'Outfit',sans-serif;cursor:none}
 
-/* ─── CURSOR ─── */
-#cur{position:fixed;width:6px;height:6px;background:var(--txt);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .08s,width .2s,height .2s;mix-blend-mode:difference}
-#cur2{position:fixed;width:28px;height:28px;border:1px solid rgba(255,255,255,.25);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease}
-body:hover #cur{opacity:1}
+/* ─── SCISSORS CURSOR ─── */
+#cur{
+  position:fixed;pointer-events:none;z-index:9999;
+  transform:translate(-4px,-4px);
+  transition:transform .06s;
+}
+#cur svg{width:32px;height:32px;filter:drop-shadow(0 0 4px rgba(184,149,90,.4));transition:transform .2s}
+#cur2{position:fixed;width:44px;height:44px;border:1px solid rgba(184,149,90,.2);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .14s ease}
+/* Scissors open on hover */
+body.hovering #cur svg{transform:rotate(-20deg) scale(1.15)}
+body.hovering #cur2{width:54px;height:54px;border-color:rgba(184,149,90,.4)}
 
 /* ─── NOISE ─── */
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:998;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px}
 
 /* ─── NAV ─── */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 4rem;height:64px;transition:background .3s,border-color .3s}
 nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--brd)}
 .nav-logo{display:flex;align-items:center;gap:1rem}
-.nav-mark{width:38px;height:38px;border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:.06em;position:relative;transition:border-color .2s}
+.nav-mark{width:38px;height:38px;border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:.06em;transition:border-color .2s}
 .nav-logo:hover .nav-mark{border-color:var(--ch)}
 .nav-brand{display:flex;flex-direction:column;gap:.08rem}
 .nb-top{font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;font-weight:500}
@@ -55,29 +55,60 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 
 /* ─── HERO ─── */
 .hero{min-height:100svh;position:relative;display:flex;align-items:flex-end;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:
-  radial-gradient(ellipse 80% 60% at 70% 40%, rgba(184,149,90,.06) 0%, transparent 60%),
-  linear-gradient(160deg,#050505 0%,#0d0c0b 50%,#080706 100%)}
-/* Animated light sweep */
-.hero-sweep{position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(184,149,90,.04) 50%,transparent 70%);animation:sweep 8s ease-in-out infinite;pointer-events:none}
-@keyframes sweep{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
-/* Vertical rule lines */
+
+/* ─── SALON ANIMATION ─── */
+.salon-scene{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+/* Animated hair strands */
+.strand{position:absolute;border-radius:50% 50% 50% 0/80% 80% 20% 0;background:none;border:1px solid rgba(184,149,90,.08);animation:strandFlow linear infinite;transform-origin:top center}
+.strand:nth-child(1){width:120px;height:300px;top:5%;left:55%;animation-duration:8s;animation-delay:0s;border-color:rgba(184,149,90,.06)}
+.strand:nth-child(2){width:80px;height:220px;top:10%;left:65%;animation-duration:10s;animation-delay:-2s;border-color:rgba(184,149,90,.05)}
+.strand:nth-child(3){width:160px;height:380px;top:0%;left:72%;animation-duration:12s;animation-delay:-4s;border-color:rgba(184,149,90,.07)}
+.strand:nth-child(4){width:100px;height:260px;top:8%;left:80%;animation-duration:9s;animation-delay:-1s;border-color:rgba(184,149,90,.05)}
+.strand:nth-child(5){width:140px;height:320px;top:2%;left:88%;animation-duration:11s;animation-delay:-6s;border-color:rgba(184,149,90,.04)}
+.strand:nth-child(6){width:90px;height:200px;top:15%;left:60%;animation-duration:13s;animation-delay:-3s;border-color:rgba(184,149,90,.06)}
+.strand:nth-child(7){width:70px;height:180px;top:5%;left:75%;animation-duration:7s;animation-delay:-5s;border-color:rgba(184,149,90,.04)}
+@keyframes strandFlow{
+  0%{transform:rotate(-5deg) scaleY(.95)}
+  25%{transform:rotate(8deg) scaleY(1.02)}
+  50%{transform:rotate(-3deg) scaleY(.98)}
+  75%{transform:rotate(6deg) scaleY(1.01)}
+  100%{transform:rotate(-5deg) scaleY(.95)}
+}
+/* Floating sparkle dots — like highlights in hair */
+.spark{position:absolute;width:2px;height:2px;background:var(--ch);border-radius:50%;animation:sparkFloat linear infinite;opacity:0}
+@keyframes sparkFloat{
+  0%{opacity:0;transform:translateY(0) scale(0)}
+  20%{opacity:.8;transform:translateY(-20px) scale(1)}
+  80%{opacity:.4;transform:translateY(-80px) scale(.5)}
+  100%{opacity:0;transform:translateY(-120px) scale(0)}
+}
+/* Big scissors silhouette in background */
+.scissors-bg{position:absolute;right:8%;top:50%;transform:translateY(-50%);width:340px;height:340px;opacity:.045;animation:scissorsPulse 6s ease-in-out infinite}
+@keyframes scissorsPulse{
+  0%,100%{opacity:.04;transform:translateY(-50%) rotate(0deg) scale(1)}
+  50%{opacity:.07;transform:translateY(-52%) rotate(8deg) scale(1.03)}
+}
+/* Comb silhouette */
+.comb-bg{position:absolute;right:22%;top:20%;opacity:.03;animation:combFloat 9s ease-in-out infinite}
+@keyframes combFloat{
+  0%,100%{transform:translateY(0) rotate(-10deg)}
+  50%{transform:translateY(-15px) rotate(-5deg)}
+}
+/* Radial glow on right */
+.hero-glow{position:absolute;right:0;top:0;bottom:0;width:60%;background:radial-gradient(ellipse 70% 60% at 80% 40%,rgba(184,149,90,.055),transparent 70%);pointer-events:none}
+/* Horizontal rule lines */
 .hero-rules{position:absolute;inset:0;pointer-events:none}
 .hr-line{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.04) 30%,rgba(255,255,255,.04) 70%,transparent)}
-.hr-line:nth-child(1){left:33.33%}
-.hr-line:nth-child(2){left:66.66%}
-/* Big italic BG text */
-.hero-bg-word{position:absolute;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:clamp(180px,28vw,320px);color:rgba(255,255,255,.022);line-height:1;right:-2%;top:50%;transform:translateY(-50%);letter-spacing:-.04em;pointer-events:none;animation:bgWord 12s ease-in-out infinite}
-@keyframes bgWord{0%,100%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-52%) scale(1.01)}}
+.hr-line:nth-child(1){left:33.33%}.hr-line:nth-child(2){left:66.66%}
 
+/* ─── HERO CONTENT ─── */
 .hero-content{position:relative;z-index:2;padding:0 4rem 5rem;width:100%}
 .hero-tag{display:inline-flex;align-items:center;gap:.7rem;margin-bottom:2rem;opacity:0;animation:riseIn .8s .1s forwards}
 .tag-dash{width:28px;height:1px;background:var(--ch)}
 .tag-txt{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ch)}
 .hero-h1{font-family:'Cormorant Garamond',serif;font-weight:300;line-height:.88;letter-spacing:-.03em;margin-bottom:2rem;opacity:0;animation:riseIn .9s .2s forwards}
 .h1-line1{display:block;font-size:clamp(4.5rem,11vw,10rem);font-weight:300}
-.h1-line2{display:block;font-size:clamp(5rem,13vw,12rem);font-weight:700;font-style:italic;position:relative}
-.h1-line2::after{content:attr(data-text);position:absolute;left:0;top:0;-webkit-text-stroke:1px rgba(255,255,255,.1);color:transparent;z-index:-1;transform:translate(3px,3px)}
+.h1-line2{display:block;font-size:clamp(5rem,13vw,12rem);font-weight:700;font-style:italic}
 .h1-line3{display:block;font-size:clamp(2rem,4vw,4rem);font-weight:300;color:var(--ch);letter-spacing:.2em;margin-top:.5rem}
 .hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;opacity:0;animation:riseIn .7s .45s forwards}
 .hero-claim{max-width:380px}
@@ -87,7 +118,7 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 .btn-main::after{content:'';position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .2s}
 .btn-main:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(184,149,90,.25)}
 .btn-main:hover::after{opacity:.08}
-.btn-outline{background:none;border:1px solid var(--brd2);color:var(--mut);padding:1rem 2rem;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;transition:all .2s}
+.btn-outline{display:inline-flex;align-items:center;background:none;border:1px solid var(--brd2);color:var(--mut);padding:1rem 2rem;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;transition:all .2s}
 .btn-outline:hover{border-color:rgba(255,255,255,.4);color:var(--txt)}
 .hero-info{display:flex;flex-direction:column;gap:1.2rem;text-align:right}
 .hi-item{display:flex;flex-direction:column;gap:.2rem}
@@ -109,7 +140,6 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 
 /* ─── PHILOSOPHY ─── */
 .philosophy{padding:8rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
-.ph-left{}
 .ph-eyebrow{display:flex;align-items:center;gap:.7rem;margin-bottom:1.5rem}
 .ph-dash{width:24px;height:1px;background:var(--ch)}
 .ph-pre{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ch)}
@@ -119,8 +149,7 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 .ph-right{display:flex;flex-direction:column;gap:2rem}
 .ph-stat{padding:1.75rem 2rem;border:1px solid var(--brd);position:relative;overflow:hidden;transition:border-color .3s}
 .ph-stat::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--ch),transparent);opacity:0;transition:opacity .3s}
-.ph-stat:hover{border-color:rgba(184,149,90,.25)}
-.ph-stat:hover::before{opacity:1}
+.ph-stat:hover{border-color:rgba(184,149,90,.25)}.ph-stat:hover::before{opacity:1}
 .ps-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:700;color:var(--ch);line-height:1;margin-bottom:.35rem}
 .ps-lbl{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
 .ps-desc{font-size:.82rem;color:var(--txt2);margin-top:.5rem;line-height:1.6}
@@ -134,9 +163,9 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 .srv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--brd)}
 .srv-card{background:var(--bg);padding:2.5rem 2rem;cursor:none;position:relative;overflow:hidden;transition:background .3s}
 .srv-card:hover{background:var(--sur)}
-.srv-card-inner{position:relative;z-index:1}
 .sc-idx{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:700;color:rgba(255,255,255,.03);position:absolute;top:-1rem;right:-.5rem;line-height:1;transition:color .3s}
 .srv-card:hover .sc-idx{color:rgba(184,149,90,.06)}
+.srv-card-inner{position:relative;z-index:1}
 .sc-name{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:.3rem;line-height:1.1}
 .sc-dur{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ch);margin-bottom:1.75rem;opacity:.8}
 .sc-bottom{display:flex;align-items:flex-end;justify-content:space-between}
@@ -144,7 +173,6 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 .sc-price-lbl{font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);display:block;margin-bottom:.2rem}
 .sc-btn{width:34px;height:34px;border:1px solid var(--brd2);display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:.8rem;transition:all .25s}
 .srv-card:hover .sc-btn{border-color:var(--ch);color:var(--ch);transform:rotate(45deg)}
-/* Hover line top */
 .srv-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--ch);transform:scaleX(0);transition:transform .4s ease}
 .srv-card:hover::before{transform:scaleX(1)}
 
@@ -167,16 +195,11 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 .foot-ig{font-size:.62rem;letter-spacing:.14em;color:var(--ch);transition:opacity .2s}
 .foot-ig:hover{opacity:.7}
 
-/* ─── MODAL OVERLAY ─── */
+/* ─── MODAL ─── */
 .moverlay{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center}
 .moverlay.open{display:flex}
 .mback{position:absolute;inset:0;background:rgba(3,3,3,.94);backdrop-filter:blur(20px)}
-/* Big italic text behind modal */
-.mback-text{position:absolute;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(80px,15vw,160px);font-weight:700;color:rgba(255,255,255,.018);bottom:5%;right:5%;pointer-events:none;letter-spacing:-.03em}
-
-/* ─── MODAL ─── */
 .modal{position:relative;z-index:1;width:min(640px,96vw);max-height:94svh;background:var(--sur);border:1px solid var(--brd2);display:flex;flex-direction:column;animation:mIn .3s cubic-bezier(.16,1,.3,1)}
-/* Gold top line */
 .modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,var(--ch) 40%,var(--ch) 60%,transparent 100%)}
 .m-hdr{padding:1.5rem 2.25rem 1.2rem;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
 .m-hdr-logo{display:flex;align-items:center;gap:.75rem}
@@ -184,23 +207,17 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 .mhn{font-family:'Cormorant Garamond',serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:300}
 .m-close{background:none;border:none;color:var(--mut);font-size:1.3rem;line-height:1;transition:color .2s;padding:.2rem}
 .m-close:hover{color:var(--txt)}
-/* Step bar */
 .m-steps{padding:.7rem 2.25rem;border-bottom:1px solid var(--brd);display:flex;gap:.4rem}
 .ms-dot{flex:1;height:1px;background:rgba(255,255,255,.07);transition:background .35s}
-.ms-dot.active{background:var(--ch)}
-.ms-dot.done{background:var(--ch);opacity:.35}
-/* Body */
+.ms-dot.active{background:var(--ch)}.ms-dot.done{background:var(--ch);opacity:.35}
 .m-body{flex:1;overflow-y:auto;padding:2.25rem}
 .m-body::-webkit-scrollbar{width:3px}
 .m-body::-webkit-scrollbar-thumb{background:rgba(184,149,90,.2)}
-.m-step{display:none}
-.m-step.active{display:block}
+.m-step{display:none}.m-step.active{display:block}
 .ms-num{font-size:.56rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ch);margin-bottom:.5rem;opacity:.75}
 .ms-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;line-height:1.1;margin-bottom:1.75rem}
 .ms-title em{font-style:italic;font-weight:600}
 .ms-hint{font-size:.7rem;color:var(--mut);margin-bottom:1.5rem;margin-top:-.8rem;letter-spacing:.05em}
-
-/* Service options */
 .s-opts{display:flex;flex-direction:column;gap:.4rem}
 .s-opt{border:1px solid var(--brd);padding:1.1rem 1.4rem;cursor:none;transition:all .2s;display:flex;justify-content:space-between;align-items:center;background:var(--bg);position:relative;overflow:hidden}
 .s-opt::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--ch);transform:scaleY(0);transition:transform .25s}
@@ -209,15 +226,13 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 .so-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:300}
 .so-dur{font-size:.6rem;letter-spacing:.14em;color:var(--mut);margin-top:.1rem}
 .so-price{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--ch)}
-
-/* Calendar */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
 .cal-nav button{background:none;border:1px solid var(--brd);color:var(--txt);width:32px;height:32px;font-size:.9rem;cursor:none;transition:all .2s}
 .cal-nav button:hover{border-color:var(--ch);color:var(--ch)}
 .cal-month{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:300;text-transform:capitalize;letter-spacing:.04em}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:1.5rem}
 .cal-dh{text-align:center;font-size:.55rem;letter-spacing:.14em;color:var(--mut);padding:.4rem 0;text-transform:uppercase}
-.cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.78rem;cursor:none;transition:all .14s;position:relative;font-family:'Cormorant Garamond',serif;font-size:.95rem}
+.cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:.95rem;cursor:none;transition:all .14s;position:relative}
 .cal-d.empty,.cal-d.past,.cal-d.unavail{cursor:default;color:rgba(255,255,255,.1);pointer-events:none}
 .cal-d.avail:hover{background:rgba(184,149,90,.12);color:var(--chl)}
 .cal-d.sel{background:var(--ch);color:#050505;font-weight:600}
@@ -225,67 +240,51 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 .cal-d.sel.today::after{background:#050505}
 .time-lbl{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ch);margin-bottom:.7rem;opacity:.8}
 .slots{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
-.slot{border:1px solid var(--brd);padding:.5rem;text-align:center;font-size:.8rem;cursor:none;transition:all .14s;background:var(--bg);font-family:'Cormorant Garamond',serif}
+.slot{border:1px solid var(--brd);padding:.5rem;text-align:center;font-family:'Cormorant Garamond',serif;font-size:.95rem;cursor:none;transition:all .14s;background:var(--bg)}
 .slot:hover{border-color:var(--ch);color:var(--ch)}
 .slot.sel{background:var(--ch);color:#050505;border-color:var(--ch)}
 .slot.bkd{opacity:.12;cursor:not-allowed;pointer-events:none}
-
-/* Form */
 .fg{margin-bottom:1.25rem}
 .flbl{display:block;font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ch);margin-bottom:.5rem;opacity:.75}
 .finp,.ftxt{width:100%;background:transparent;border:none;border-bottom:1px solid var(--brd);color:var(--txt);padding:.7rem 0;font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:300;outline:none;transition:border-color .2s}
 .finp:focus,.ftxt:focus{border-color:rgba(184,149,90,.45)}
 .ftxt{resize:vertical;min-height:75px;border:1px solid var(--brd);padding:.7rem .9rem;font-family:'Outfit',sans-serif;font-size:.88rem}
-
-/* Confirm */
 .csum{border:1px solid var(--brd);overflow:hidden}
 .cr{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1.25rem;border-bottom:1px solid var(--brd);transition:background .15s}
-.cr:last-child{border-bottom:none}
-.cr:hover{background:rgba(255,255,255,.02)}
+.cr:last-child{border-bottom:none}.cr:hover{background:rgba(255,255,255,.02)}
 .ck{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
 .cv{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;text-align:right;max-width:65%}
-
-/* Success */
 .m-success{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;gap:2rem;min-height:340px}
 .m-success.show{display:flex}
 .suc-circle{width:56px;height:56px;border:1px solid var(--ch);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ch);font-size:1.1rem;animation:sucGlow 2.5s ease-in-out infinite}
 @keyframes sucGlow{0%,100%{box-shadow:0 0 0 0 rgba(184,149,90,.25)}50%{box-shadow:0 0 0 14px rgba(184,149,90,0)}}
 .suc-title{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;line-height:1.15}
 .suc-title em{font-style:italic;color:var(--ch)}
-.suc-sub{font-size:.72rem;color:var(--mut);letter-spacing:.08em;max-width:280px}
+.suc-sub{font-size:.72rem;color:var(--mut);letter-spacing:.08em;max-width:280px;display:block}
 .btn-wa{display:inline-flex;align-items:center;gap:.55rem;background:#25d366;color:#fff;border:none;padding:.78rem 1.75rem;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-family:'Outfit',sans-serif;cursor:none;transition:all .2s;box-shadow:0 8px 24px rgba(37,211,102,.2)}
 .btn-wa:hover{transform:translateY(-1px);box-shadow:0 14px 36px rgba(37,211,102,.3)}
 .btn-nuevo{background:none;border:1px solid var(--brd2);color:var(--mut);padding:.6rem 1.25rem;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;cursor:none;font-family:'Outfit',sans-serif;transition:all .2s}
 .btn-nuevo:hover{border-color:rgba(255,255,255,.35);color:var(--txt)}
-
-/* Modal footer */
 .m-foot{padding:.95rem 2.25rem;border-top:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
-.m-back{background:none;border:none;color:var(--mut);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;cursor:none;font-family:'Outfit',sans-serif;transition:color .2s;display:flex;align-items:center;gap:.4rem}
-.m-back:hover{color:var(--txt)}
-.m-back:disabled{opacity:.18;cursor:not-allowed}
+.m-back{background:none;border:none;color:var(--mut);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;cursor:none;font-family:'Outfit',sans-serif;transition:color .2s}
+.m-back:hover{color:var(--txt)}.m-back:disabled{opacity:.18;cursor:not-allowed}
 .m-next{background:var(--ch);border:none;color:#050505;padding:.7rem 1.85rem;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;font-family:'Outfit',sans-serif;cursor:none;transition:all .2s;position:relative;overflow:hidden}
 .m-next::before{content:'';position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .15s}
 .m-next:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 24px rgba(184,149,90,.25)}
 .m-next:hover::before{opacity:.08}
 .m-next:disabled{opacity:.25;cursor:not-allowed}
 
-/* ─── ANIMATIONS ─── */
 @keyframes riseIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes mIn{from{opacity:0;transform:translateY(14px) scale(.99)}to{opacity:1;transform:none}}
 
-/* ─── RESPONSIVE ─── */
 @media(max-width:768px){
   nav{padding:0 1.5rem}.nav-center{display:none}
-  .hero-content{padding:0 1.5rem 4rem}
-  .hero-info{display:none}
-  .hero-bg-word{display:none}
+  .hero-content{padding:0 1.5rem 4rem}.hero-info{display:none}
   .philosophy{grid-template-columns:1fr;gap:3rem;padding:5rem 1.5rem}
-  .services{padding:0 1.5rem 5rem}
-  .srv-grid{grid-template-columns:1fr}
-  .info-strip{grid-template-columns:1fr 1fr}
-  .is-item{padding:1.75rem 1.5rem}
-  footer{padding:1.5rem;flex-direction:column;gap:.75rem;text-align:center}.foot-right{flex-direction:column;gap:.5rem}
+  .services{padding:0 1.5rem 5rem}.srv-grid{grid-template-columns:1fr}
+  .info-strip{grid-template-columns:1fr 1fr}.is-item{padding:1.75rem 1.5rem}
+  footer{padding:1.5rem;flex-direction:column;gap:.75rem;text-align:center}
   .m-body{padding:1.5rem}.m-hdr{padding:1rem 1.5rem}.m-steps{padding:.6rem 1.5rem}.m-foot{padding:.85rem 1.5rem}
   .slots{grid-template-columns:repeat(4,1fr)}
 }
@@ -293,7 +292,16 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 </head>
 <body>
 
-<div id="cur"></div>
+<!-- SCISSORS CURSOR -->
+<div id="cur">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="8" cy="8" r="4.5" stroke="#c8a96e" stroke-width="1.2"/>
+    <circle cx="8" cy="24" r="4.5" stroke="#c8a96e" stroke-width="1.2"/>
+    <line x1="12" y1="10" x2="28" y2="4" stroke="#c8a96e" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="12" y1="22" x2="28" y2="28" stroke="#c8a96e" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="17" cy="16" r="1.5" fill="#c8a96e" opacity=".6"/>
+  </svg>
+</div>
 <div id="cur2"></div>
 
 <!-- NAV -->
@@ -304,7 +312,7 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
   </a>
   <div class="nav-center">
     <a href="#servicios">Servicios</a>
-    <a id="nav-ig" href="#" target="_blank">Instagram</a>
+    <a id="nav-ig" href="https://instagram.com/gonzalocortez.hc" target="_blank">Instagram</a>
     <a href="#info">Contacto</a>
   </div>
   <button class="btn-reservar" onclick="openModal()"><span>Reservar turno</span></button>
@@ -312,15 +320,44 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-sweep"></div>
+  <!-- Salon animation -->
+  <div class="salon-scene">
+    <!-- Hair strands -->
+    <div class="strand"></div>
+    <div class="strand"></div>
+    <div class="strand"></div>
+    <div class="strand"></div>
+    <div class="strand"></div>
+    <div class="strand"></div>
+    <div class="strand"></div>
+    <!-- Sparkles -->
+    <div id="sparks"></div>
+    <!-- Scissors silhouette -->
+    <svg class="scissors-bg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="28" stroke="#c8a96e" stroke-width="3"/>
+      <circle cx="40" cy="160" r="28" stroke="#c8a96e" stroke-width="3"/>
+      <line x1="62" y1="52" x2="185" y2="20" stroke="#c8a96e" stroke-width="4" stroke-linecap="round"/>
+      <line x1="62" y1="148" x2="185" y2="180" stroke="#c8a96e" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="110" cy="100" r="8" fill="#c8a96e" opacity=".4"/>
+    </svg>
+    <!-- Comb silhouette -->
+    <svg class="comb-bg" viewBox="0 0 60 140" fill="none" xmlns="http://www.w3.org/2000/svg" width="60" height="140">
+      <rect x="2" y="2" width="56" height="20" rx="3" stroke="#c8a96e" stroke-width="2"/>
+      <line x1="10" y1="22" x2="10" y2="80" stroke="#c8a96e" stroke-width="2" stroke-linecap="round"/>
+      <line x1="20" y1="22" x2="20" y2="90" stroke="#c8a96e" stroke-width="2" stroke-linecap="round"/>
+      <line x1="30" y1="22" x2="30" y2="75" stroke="#c8a96e" stroke-width="2" stroke-linecap="round"/>
+      <line x1="40" y1="22" x2="40" y2="85" stroke="#c8a96e" stroke-width="2" stroke-linecap="round"/>
+      <line x1="50" y1="22" x2="50" y2="70" stroke="#c8a96e" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="hero-glow"></div>
+  </div>
   <div class="hero-rules"><div class="hr-line"></div><div class="hr-line"></div></div>
-  <div class="hero-bg-word">Hair</div>
+
   <div class="hero-content">
     <div class="hero-tag"><div class="tag-dash"></div><span class="tag-txt" id="hero-tag">Peluquero Colorista · Villa del Parque</span></div>
     <h1 class="hero-h1">
       <span class="h1-line1">GC</span>
-      <span class="h1-line2" data-text="Hair">Hair</span>
+      <span class="h1-line2">Hair</span>
       <span class="h1-line3">Concept</span>
     </h1>
     <div class="hero-bottom">
@@ -334,7 +371,7 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
       <div class="hero-info">
         <div class="hi-item"><span class="hi-lbl">Dirección</span><span class="hi-val" id="hi-addr">Simbron 3212</span></div>
         <div class="hi-item"><span class="hi-lbl">Horarios</span><span class="hi-val" id="hi-hrs">Mar–Sab · 10 a 20hs</span></div>
-        <div class="hi-item"><span class="hi-lbl">Instagram</span><span class="hi-val"><a id="hi-ig" href="#" target="_blank">@gonzalocortez.hc</a></span></div>
+        <div class="hi-item"><span class="hi-lbl">Instagram</span><span class="hi-val"><a id="hi-ig" href="https://instagram.com/gonzalocortez.hc" target="_blank">@gonzalocortez.hc</a></span></div>
       </div>
     </div>
   </div>
@@ -376,7 +413,7 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 <div class="info-strip" id="info">
   <div class="is-item"><span class="is-lbl">Dirección</span><span class="is-val" id="is-addr">Simbron 3212, Villa del Parque</span></div>
   <div class="is-item"><span class="is-lbl">Horarios</span><span class="is-val" id="is-hrs">Mar–Sab · 10 a 20hs</span></div>
-  <div class="is-item"><span class="is-lbl">Instagram</span><span class="is-val"><a id="is-ig" href="#" target="_blank">@gonzalocortez.hc</a></span></div>
+  <div class="is-item"><span class="is-lbl">Instagram</span><span class="is-val"><a id="is-ig" href="https://instagram.com/gonzalocortez.hc" target="_blank">@gonzalocortez.hc</a></span></div>
   <div class="is-item"><span class="is-lbl">Reservas</span><span class="is-val"><a href="#" onclick="openModal();return false" style="color:var(--ch)">Agendá tu turno →</a></span></div>
 </div>
 
@@ -385,70 +422,47 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
   <div class="foot-logo"><div class="fm">GC</div><span class="fn">Hair Concept</span></div>
   <div class="foot-right">
     <span class="foot-copy" id="foot-copy">© 2025 GC Hair Concept · Gonzalo Cortez</span>
-    <a class="foot-ig" id="foot-ig" href="#" target="_blank">@gonzalocortez.hc</a>
+    <a class="foot-ig" id="foot-ig" href="https://instagram.com/gonzalocortez.hc" target="_blank">@gonzalocortez.hc</a>
   </div>
 </footer>
 
-<!-- BOOKING MODAL -->
+<!-- MODAL -->
 <div class="moverlay" id="moverlay">
-  <div class="mback" onclick="closeModal()"><div class="mback-text">GC</div></div>
+  <div class="mback" onclick="closeModal()"></div>
   <div class="modal">
     <div class="m-hdr">
       <div class="m-hdr-logo"><div class="mhm">GC</div><span class="mhn">Hair Concept</span></div>
       <button class="m-close" onclick="closeModal()">×</button>
     </div>
     <div class="m-steps" id="msteps">
-      <div class="ms-dot active" id="dot1"></div>
-      <div class="ms-dot" id="dot2"></div>
-      <div class="ms-dot" id="dot3"></div>
-      <div class="ms-dot" id="dot4"></div>
+      <div class="ms-dot active" id="dot1"></div><div class="ms-dot" id="dot2"></div><div class="ms-dot" id="dot3"></div><div class="ms-dot" id="dot4"></div>
     </div>
     <div class="m-body" id="mbody">
-      <!-- Step 1 -->
       <div class="m-step active" id="step1">
-        <p class="ms-num">01 / 04</p>
-        <h3 class="ms-title">¿Qué <em>servicio</em> necesitás?</h3>
-        <p class="ms-hint">Seleccioná una opción para continuar</p>
+        <p class="ms-num">01 / 04</p><h3 class="ms-title">¿Qué <em>servicio</em> necesitás?</h3><p class="ms-hint">Seleccioná una opción</p>
         <div class="s-opts" id="sopts"></div>
       </div>
-      <!-- Step 2 -->
       <div class="m-step" id="step2">
-        <p class="ms-num">02 / 04</p>
-        <h3 class="ms-title">¿Cuándo <em>venís?</em></h3>
-        <p class="ms-hint">Martes a Sábado · 10 a 20hs</p>
-        <div class="cal-nav">
-          <button onclick="prevMonth()">‹</button>
-          <span class="cal-month" id="calLabel"></span>
-          <button onclick="nextMonth()">›</button>
-        </div>
+        <p class="ms-num">02 / 04</p><h3 class="ms-title">¿Cuándo <em>venís?</em></h3><p class="ms-hint">Martes a Sábado · 10 a 20hs</p>
+        <div class="cal-nav"><button onclick="prevMonth()">‹</button><span class="cal-month" id="calLabel"></span><button onclick="nextMonth()">›</button></div>
         <div class="cal-grid" id="calGrid"></div>
-        <div id="timeSec" style="display:none">
-          <p class="time-lbl">Horarios disponibles</p>
-          <div class="slots" id="slotsGrid"></div>
-        </div>
+        <div id="timeSec" style="display:none"><p class="time-lbl">Horarios disponibles</p><div class="slots" id="slotsGrid"></div></div>
       </div>
-      <!-- Step 3 -->
       <div class="m-step" id="step3">
-        <p class="ms-num">03 / 04</p>
-        <h3 class="ms-title">Tus <em>datos</em></h3>
-        <p class="ms-hint">Para confirmar la reserva</p>
+        <p class="ms-num">03 / 04</p><h3 class="ms-title">Tus <em>datos</em></h3><p class="ms-hint">Para confirmar la reserva</p>
         <div class="fg"><label class="flbl">Nombre y apellido *</label><input class="finp" id="iName" type="text" placeholder="Juan Pérez"></div>
         <div class="fg"><label class="flbl">WhatsApp *</label><input class="finp" id="iWa" type="tel" placeholder="11 1234-5678"></div>
         <div class="fg"><label class="flbl">Email</label><input class="finp" id="iEmail" type="email" placeholder="juan@email.com"></div>
-        <div class="fg"><label class="flbl">Aclaraciones</label><textarea class="ftxt" id="iNotes" placeholder="Algún detalle adicional..."></textarea></div>
+        <div class="fg"><label class="flbl">Aclaraciones</label><textarea class="ftxt" id="iNotes" placeholder="Algún detalle..."></textarea></div>
       </div>
-      <!-- Step 4 -->
       <div class="m-step" id="step4">
-        <p class="ms-num">04 / 04</p>
-        <h3 class="ms-title">Confirmá tu <em>turno</em></h3>
-        <p class="ms-hint">Revisá los datos antes de confirmar</p>
+        <p class="ms-num">04 / 04</p><h3 class="ms-title">Confirmá tu <em>turno</em></h3><p class="ms-hint">Revisá los datos</p>
         <div class="csum" id="csum"></div>
       </div>
     </div>
-    <!-- Success -->
     <div class="m-success" id="mSuccess">
       <div class="suc-circle">✓</div>
-      <div><h3 class="suc-title">¡Turno <em>confirmado!</em></h3><p class="suc-sub" style="margin-top:.6rem;display:block">Te contactaremos para confirmar tu reserva</p></div>
+      <div><h3 class="suc-title">¡Turno <em>confirmado!</em></h3><p class="suc-sub" style="margin-top:.6rem">Te contactaremos para confirmar tu reserva</p></div>
       <a class="btn-wa" id="waLink" href="#" target="_blank">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         Confirmar por WhatsApp
@@ -463,11 +477,26 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 </div>
 
 <script>
-/* ── CURSOR ── */
-const C=document.getElementById('cur'),C2=document.getElementById('cur2');
-document.addEventListener('mousemove',e=>{C.style.left=e.clientX+'px';C.style.top=e.clientY+'px';setTimeout(()=>{C2.style.left=e.clientX+'px';C2.style.top=e.clientY+'px';},80);});
-const hoverEls='button,a,.s-opt,.srv-card,.slot,.cal-d.avail,.is-item';
-document.querySelectorAll(hoverEls).forEach(el=>{el.addEventListener('mouseenter',()=>{C.style.width='14px';C.style.height='14px';C2.style.width='44px';C2.style.height='44px';});el.addEventListener('mouseleave',()=>{C.style.width='6px';C.style.height='6px';C2.style.width='28px';C2.style.height='28px';});});
+/* ── SCISSORS CURSOR ── */
+const CUR=document.getElementById('cur'),CUR2=document.getElementById('cur2');
+document.addEventListener('mousemove',e=>{
+  CUR.style.left=e.clientX+'px';CUR.style.top=e.clientY+'px';
+  setTimeout(()=>{CUR2.style.left=e.clientX+'px';CUR2.style.top=e.clientY+'px';},80);
+});
+const interactives='button,a,.s-opt,.srv-card,.slot,.cal-d.avail,.is-item,.ph-stat';
+document.addEventListener('mouseover',e=>{
+  if(e.target.closest(interactives)){document.body.classList.add('hovering');}
+  else{document.body.classList.remove('hovering');}
+});
+
+/* ── SPARKLES ── */
+function createSpark(){
+  const el=document.createElement('div');
+  el.className='spark';
+  el.style.cssText=`left:${50+Math.random()*40}%;top:${20+Math.random()*70}%;animation:sparkFloat ${2+Math.random()*3}s ${Math.random()*4}s linear infinite`;
+  document.getElementById('sparks').appendChild(el);
+}
+for(let i=0;i<18;i++)createSpark();
 
 /* ── NAV SCROLL ── */
 window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',scrollY>60);});
@@ -486,16 +515,11 @@ function init(){
   document.getElementById('hero-tag').textContent=T.heroSubtitle;
   document.getElementById('hi-addr').textContent=T.address.split(',')[0];
   document.getElementById('hi-hrs').textContent=T.hours;
-  document.getElementById('hi-ig').textContent='@'+T.instagram;
-  document.getElementById('hi-ig').href='https://instagram.com/'+T.instagram;
+  ['hi-ig','is-ig','foot-ig'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='@'+T.instagram;el.href='https://instagram.com/'+T.instagram;}});
   document.getElementById('nav-ig').href='https://instagram.com/'+T.instagram;
   document.getElementById('is-addr').textContent=T.address;
   document.getElementById('is-hrs').textContent=T.hours;
-  document.getElementById('is-ig').textContent='@'+T.instagram;
-  document.getElementById('is-ig').href='https://instagram.com/'+T.instagram;
   document.getElementById('foot-copy').textContent=T.footerText;
-  document.getElementById('foot-ig').textContent='@'+T.instagram;
-  document.getElementById('foot-ig').href='https://instagram.com/'+T.instagram;
   renderSrvGrid();
 }
 function renderSrvGrid(){
@@ -524,40 +548,14 @@ function resetBk(){
   ['iName','iWa','iEmail','iNotes'].forEach(id=>document.getElementById(id).value='');
   const n=new Date();calY=n.getFullYear();calM=n.getMonth();
 }
-function renderSopts(){
-  document.getElementById('sopts').innerHTML=getSrv().map(s=>`
-    <div class="s-opt ${bk.sid===s.id?'sel':''}" onclick="selSrv(${s.id})" id="opt${s.id}">
-      <div><div class="so-name">${s.name}</div><div class="so-dur">${s.duration} min</div></div>
-      <div class="so-price">$${s.price.toLocaleString('es-AR')}</div>
-    </div>`).join('');
-}
+function renderSopts(){document.getElementById('sopts').innerHTML=getSrv().map(s=>`<div class="s-opt ${bk.sid===s.id?'sel':''}" onclick="selSrv(${s.id})" id="opt${s.id}"><div><div class="so-name">${s.name}</div><div class="so-dur">${s.duration} min</div></div><div class="so-price">$${s.price.toLocaleString('es-AR')}</div></div>`).join('');}
 function selSrv(id){const s=getSrv().find(x=>x.id===id);if(!s)return;Object.assign(bk,{sid:s.id,sname:s.name,sprice:s.price,sdur:s.duration});document.querySelectorAll('.s-opt').forEach(e=>e.classList.remove('sel'));document.getElementById('opt'+id)?.classList.add('sel');updNext();}
-function goStep(n){
-  document.querySelectorAll('.m-step').forEach(e=>e.classList.remove('active'));
-  document.querySelectorAll('.ms-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i+1<n)d.classList.add('done');else if(i+1===n)d.classList.add('active');});
-  curStep=n;document.getElementById('step'+n).classList.add('active');
-  document.getElementById('btnBack').disabled=n===1;
-  document.getElementById('btnNext').textContent=n===4?'Confirmar →':'Continuar →';
-  if(n===2)renderCal();if(n===4)renderCsum();updNext();document.getElementById('mbody').scrollTop=0;
-}
-function nextStep(){
-  if(curStep===3){const nm=document.getElementById('iName').value.trim(),wa=document.getElementById('iWa').value.trim();if(!nm||!wa){alert('Por favor completá nombre y WhatsApp.');return;}bk.name=nm;bk.wa=wa;bk.email=document.getElementById('iEmail').value.trim();bk.notes=document.getElementById('iNotes').value.trim();}
-  if(curStep===4){confirmBk();return;}
-  if(curStep<4)goStep(curStep+1);
-}
+function goStep(n){document.querySelectorAll('.m-step').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.ms-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i+1<n)d.classList.add('done');else if(i+1===n)d.classList.add('active');});curStep=n;document.getElementById('step'+n).classList.add('active');document.getElementById('btnBack').disabled=n===1;document.getElementById('btnNext').textContent=n===4?'Confirmar →':'Continuar →';if(n===2)renderCal();if(n===4)renderCsum();updNext();document.getElementById('mbody').scrollTop=0;}
+function nextStep(){if(curStep===3){const nm=document.getElementById('iName').value.trim(),wa=document.getElementById('iWa').value.trim();if(!nm||!wa){alert('Por favor completá nombre y WhatsApp.');return;}bk.name=nm;bk.wa=wa;bk.email=document.getElementById('iEmail').value.trim();bk.notes=document.getElementById('iNotes').value.trim();}if(curStep===4){confirmBk();return;}if(curStep<4)goStep(curStep+1);}
 function prevStep(){if(curStep>1)goStep(curStep-1);}
 function updNext(){const d=document.getElementById('btnNext');if(curStep===1)d.disabled=!bk.sid;else if(curStep===2)d.disabled=!bk.date||!bk.time;else d.disabled=false;}
-
-/* ── CALENDAR ── */
 const DAYS=['D','L','M','X','J','V','S'],MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],AVAIL=[2,3,4,5,6];
-function renderCal(){
-  document.getElementById('calLabel').textContent=MONTHS[calM]+' '+calY;
-  const fd=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate(),today=new Date();today.setHours(0,0,0,0);
-  let h=DAYS.map(d=>`<div class="cal-dh">${d}</div>`).join('');
-  for(let i=0;i<fd;i++)h+=`<div class="cal-d empty"></div>`;
-  for(let d=1;d<=dim;d++){const dt=new Date(calY,calM,d),dow=dt.getDay();const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isPast=dt<today,isAvail=AVAIL.includes(dow)&&!isPast,isToday=dt.getTime()===today.getTime();let c='cal-d';if(isToday)c+=' today';if(isPast)c+=' past';else if(!AVAIL.includes(dow))c+=' unavail';else c+=' avail';if(bk.date===ds)c+=' sel';h+=`<div class="${c}" ${isAvail?`onclick="selDate('${ds}')"`:''}>${d}</div>`;}
-  document.getElementById('calGrid').innerHTML=h;if(bk.date)renderSlots();
-}
+function renderCal(){document.getElementById('calLabel').textContent=MONTHS[calM]+' '+calY;const fd=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate(),today=new Date();today.setHours(0,0,0,0);let h=DAYS.map(d=>`<div class="cal-dh">${d}</div>`).join('');for(let i=0;i<fd;i++)h+=`<div class="cal-d empty"></div>`;for(let d=1;d<=dim;d++){const dt=new Date(calY,calM,d),dow=dt.getDay();const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isPast=dt<today,isAvail=AVAIL.includes(dow)&&!isPast,isToday=dt.getTime()===today.getTime();let c='cal-d';if(isToday)c+=' today';if(isPast)c+=' past';else if(!AVAIL.includes(dow))c+=' unavail';else c+=' avail';if(bk.date===ds)c+=' sel';h+=`<div class="${c}" ${isAvail?`onclick="selDate('${ds}')"`:''}>${d}</div>`;}document.getElementById('calGrid').innerHTML=h;if(bk.date)renderSlots();}
 function prevMonth(){calM--;if(calM<0){calM=11;calY--;}renderCal();}
 function nextMonth(){calM++;if(calM>11){calM=0;calY++;}renderCal();}
 function selDate(ds){bk.date=ds;bk.time='';renderCal();document.getElementById('timeSec').style.display='block';renderSlots();updNext();}
@@ -566,12 +564,9 @@ function toMin(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
 function isBooked(ds,ts,dur){const as=getAppts().filter(a=>a.status!=='cancelado'&&a.date===ds),ss=toMin(ts),se=ss+dur;return as.some(a=>{const as2=toMin(a.time),ae=as2+a.sdur;return ss<ae&&se>as2;});}
 function renderSlots(){document.getElementById('slotsGrid').innerHTML=genSlots(bk.sdur).map(t=>{const bkd=isBooked(bk.date,t,bk.sdur),sel=bk.time===t;return`<div class="slot ${bkd?'bkd':''} ${sel?'sel':''}" ${!bkd?`onclick="selTime('${t}')"`:''}>${t}</div>`;}).join('');}
 function selTime(t){bk.time=t;renderSlots();updNext();}
-
-/* ── CONFIRM ── */
 function renderCsum(){const dObj=new Date(bk.date+'T12:00:00'),df=dObj.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});const rows=[{k:'Servicio',v:bk.sname},{k:'Precio',v:'$'+bk.sprice.toLocaleString('es-AR')+' ARS'},{k:'Fecha',v:df.charAt(0).toUpperCase()+df.slice(1)},{k:'Horario',v:bk.time+' hs'},{k:'Nombre',v:bk.name},{k:'WhatsApp',v:bk.wa}];if(bk.email)rows.push({k:'Email',v:bk.email});if(bk.notes)rows.push({k:'Aclaraciones',v:bk.notes});document.getElementById('csum').innerHTML=rows.map(r=>`<div class="cr"><span class="ck">${r.k}</span><span class="cv">${r.v}</span></div>`).join('');}
 function confirmBk(){const appt={id:Date.now().toString(),...bk,status:'pendiente',createdAt:new Date().toISOString()};saveAppt(appt);const T=getTxt();const dObj=new Date(bk.date+'T12:00:00');const df=dObj.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});const msg=encodeURIComponent(`Hola Gonzalo! Quiero confirmar mi turno:\n\n*Servicio:* ${bk.sname}\n*Fecha:* ${df}\n*Hora:* ${bk.time} hs\n*Nombre:* ${bk.name}`);document.getElementById('waLink').href=`https://wa.me/${T.whatsapp}?text=${msg}`;document.getElementById('mbody').style.display='none';document.getElementById('mfoot').style.display='none';document.getElementById('msteps').style.display='none';document.getElementById('mSuccess').classList.add('show');}
 function newBooking(){document.getElementById('mbody').style.display='';document.getElementById('mfoot').style.display='';document.getElementById('msteps').style.display='';document.getElementById('mSuccess').classList.remove('show');resetBk();renderSopts();goStep(1);}
-
 init();
 </script>
 </body>
