@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GC Hair Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080808;
+  --bg2:#101010;
+  --sur:#141414;
+  --sur2:#1c1c1c;
+  --brd:rgba(255,255,255,.07);
+  --brd2:rgba(255,255,255,.13);
+  --txt:#f2f0ec;
+  --mut:rgba(242,240,236,.4);
+  --mut2:rgba(242,240,236,.2);
+  --acc:#e8e0d0;
+  --gold:#c8a96e;
+  --goldl:#e8c98e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+.cur{position:fixed;width:8px;height:8px;background:#fff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;mix-blend-mode:difference}
+.cur2{position:fixed;width:32px;height:32px;border:1px solid rgba(255,255,255,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .1s ease}
+
+/* NOISE */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:500;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
+
+/* ANIMATED GRID LINES */
+.grid-lines{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.gl{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent 0%,rgba(255,255,255,.04) 20%,rgba(255,255,255,.04) 80%,transparent 100%)}
+.gl:nth-child(1){left:20%}
+.gl:nth-child(2){left:40%}
+.gl:nth-child(3){left:60%}
+.gl:nth-child(4){left:80%}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 3.5rem;height:62px;background:rgba(8,8,8,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--brd)}
+.nav-logo{display:flex;align-items:center;gap:.85rem;text-decoration:none;color:inherit}
+.nav-mark{width:34px;height:34px;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;position:relative;transition:border-color .2s}
+.nav-mark::after{content:'';position:absolute;inset:3px;background:rgba(255,255,255,.04)}
+.nav-logo:hover .nav-mark{border-color:rgba(255,255,255,.5)}
+.nav-brand{display:flex;flex-direction:column;line-height:1.15}
+.nav-brand-name{font-family:'Playfair Display',serif;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;font-weight:400}
+.nav-brand-sub{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+.nav-links{display:flex;align-items:center;gap:2.5rem;list-style:none}
+.nav-links a{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);transition:color .2s}
+.nav-links a:hover{color:var(--txt)}
+.btn-nav{background:var(--txt);border:none;color:#080808;padding:.52rem 1.5rem;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;font-family:'Outfit',sans-serif;transition:all .2s;position:relative;overflow:hidden}
+.btn-nav::after{content:'';position:absolute;inset:0;background:#000;opacity:0;transition:opacity .2s}
+.btn-nav:hover::after{opacity:.08}
+
+/* HERO */
+.hero{min-height:100svh;display:grid;grid-template-rows:1fr auto;padding:8rem 3.5rem 4rem;position:relative;overflow:hidden}
+.hero-body{display:flex;flex-direction:column;justify-content:flex-end;gap:2rem;position:relative;z-index:1}
+.hero-kicker{display:flex;align-items:center;gap:.75rem;opacity:0;animation:fadeUp .6s .1s forwards}
+.kicker-line{width:30px;height:1px;background:var(--gold)}
+.kicker-text{font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+.hero-title{font-family:'Playfair Display',serif;line-height:.88;letter-spacing:-.025em;opacity:0;animation:fadeUp .8s .2s forwards}
+.ht-1{display:block;font-size:clamp(5rem,14vw,13rem);font-weight:900;color:var(--txt)}
+.ht-2{display:block;font-size:clamp(5rem,14vw,13rem);font-weight:900;font-style:italic;-webkit-text-stroke:1.5px rgba(255,255,255,.35);color:transparent;position:relative}
+.ht-3{display:block;font-size:clamp(2rem,5vw,4.5rem);font-weight:300;color:var(--gold);letter-spacing:.12em;margin-top:.4rem;font-style:italic}
+.hero-desc{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--mut);line-height:1.8;max-width:420px;opacity:0;animation:fadeUp .6s .38s forwards}
+.hero-cta{display:flex;align-items:center;gap:1.25rem;opacity:0;animation:fadeUp .6s .52s forwards}
+.btn-primary{background:var(--txt);border:none;color:#080808;padding:.9rem 2.25rem;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;font-family:'Outfit',sans-serif;transition:all .2s;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;inset:0;background:#000;opacity:0;transition:opacity .2s}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-primary:hover::after{opacity:.08}
+.btn-ghost{background:none;border:1px solid var(--brd2);color:var(--mut);padding:.9rem 2rem;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-family:'Outfit',sans-serif;transition:all .2s}
+.btn-ghost:hover{border-color:rgba(255,255,255,.4);color:var(--txt)}
+
+/* HERO DECO */
+.hero-deco{position:absolute;right:3.5rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:2.5rem;opacity:0;animation:fadeUp .6s .65s forwards;z-index:1}
+.hd-num{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:var(--gold);line-height:1}
+.hd-lbl{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mut);margin-top:.2rem;text-align:right}
+.hd-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--brd2),transparent);margin-left:auto}
+
+.hero-foot{display:flex;justify-content:space-between;align-items:flex-end;padding-top:2rem;border-top:1px solid var(--brd);opacity:0;animation:fadeUp .6s .75s forwards;position:relative;z-index:1}
+.hf-item{display:flex;flex-direction:column;gap:.25rem}
+.hfi-lbl{font-size:.54rem;letter-spacing:.24em;text-transform:uppercase;color:var(--mut2)}
+.hfi-val{font-size:.8rem;color:var(--mut)}
+.hfi-val a:hover{color:var(--txt);transition:color .2s}
+
+/* BIG BG LETTER */
+.hero-bg-letter{position:absolute;right:-5%;bottom:-10%;font-family:'Playfair Display',serif;font-size:45vw;font-weight:900;font-style:italic;color:rgba(255,255,255,.018);line-height:1;pointer-events:none;z-index:0;letter-spacing:-.05em;animation:bgLetterFloat 10s ease-in-out infinite}
+@keyframes bgLetterFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+
+/* SCROLL IND */
+.scroll-ind{position:absolute;bottom:2.5rem;left:3.5rem;display:flex;flex-direction:column;gap:.5rem;align-items:flex-start;opacity:.35;z-index:1}
+.si-text{font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;writing-mode:vertical-lr;color:var(--mut)}
+.si-bar{width:1px;height:50px;background:linear-gradient(to bottom,var(--txt),transparent);animation:siAnim 2s ease-in-out infinite}
+@keyframes siAnim{0%{transform:scaleY(0);transform-origin:top;opacity:1}50%{transform:scaleY(1);transform-origin:top;opacity:1}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom;opacity:0}}
+
+/* MARQUEE */
+.mqw{border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);overflow:hidden;white-space:nowrap;padding:.65rem 0;background:var(--bg2);position:relative}
+.mqw::before,.mqw::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.mqw::before{left:0;background:linear-gradient(to right,var(--bg2),transparent)}
+.mqw::after{right:0;background:linear-gradient(to left,var(--bg2),transparent)}
+.mqt{display:inline-block;animation:mq 26s linear infinite}
+.mqt span{font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:var(--mut);padding:0 1.5rem}
+.mqt span.g{color:var(--gold);font-size:.4rem;padding:0 .2rem;vertical-align:middle}
+
+/* SERVICES */
+.services{padding:7rem 3.5rem;background:var(--bg);position:relative}
+.sec-header{display:grid;grid-template-columns:1fr auto;align-items:flex-end;margin-bottom:4rem;padding-bottom:1.25rem;border-bottom:1px solid var(--brd)}
+.sec-left{}
+.sec-pre{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;display:flex;align-items:center;gap:.6rem}
+.sec-pre::before{content:'';width:20px;height:1px;background:var(--gold)}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:700;line-height:1.05}
+.sec-title em{font-style:italic;color:var(--gold)}
+.sec-right{font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);text-align:right}
+
+.srv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1px;background:var(--brd)}
+.srv-card{background:var(--bg);padding:2.25rem 2rem;cursor:none;transition:background .25s;position:relative;overflow:hidden}
+.srv-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
+.srv-card:hover{background:var(--sur)}
+.srv-card:hover::before{opacity:1}
+.srv-num{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;color:rgba(255,255,255,.04);position:absolute;top:1.25rem;right:1.5rem;line-height:1}
+.srv-name{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;margin-bottom:.3rem;transition:color .2s}
+.srv-card:hover .srv-name{color:var(--acc)}
+.srv-dur{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin-bottom:2rem}
+.srv-bottom{display:flex;align-items:flex-end;justify-content:space-between}
+.srv-price{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--gold)}
+.srv-price small{font-size:.6rem;font-family:'Outfit',sans-serif;color:var(--mut);display:block;letter-spacing:.1em}
+.srv-cta{width:36px;height:36px;border:1px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:.85rem;color:var(--mut);transition:all .25s}
+.srv-card:hover .srv-cta{border-color:var(--gold);color:var(--gold);transform:rotate(45deg)}
+
+/* STRIP */
+.strip{background:var(--sur);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);display:grid;grid-template-columns:repeat(4,1fr)}
+.strip-item{padding:2.5rem 2.75rem;border-right:1px solid var(--brd);display:flex;flex-direction:column;gap:.45rem;transition:background .2s}
+.strip-item:last-child{border-right:none}
+.strip-item:hover{background:var(--sur2)}
+.si-lbl{font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.si-val{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;color:var(--acc)}
+.si-val a{transition:color .2s}
+.si-val a:hover{color:var(--txt)}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--brd);padding:2rem 3.5rem;display:flex;align-items:center;justify-content:space-between}
+.foot-left{display:flex;align-items:center;gap:1rem}
+.foot-mark{width:28px;height:28px;border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.8rem;font-weight:700}
+.foot-name{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:400}
+.foot-right{display:flex;align-items:center;gap:2.5rem}
+.foot-copy{font-size:.62rem;letter-spacing:.08em;color:var(--mut)}
+.foot-ig{font-size:.65rem;letter-spacing:.12em;color:var(--gold);transition:opacity .2s}
+.foot-ig:hover{opacity:.7}
+
+/* MODAL */
+.moverlay{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center}
+.moverlay.open{display:flex}
+.mback{position:absolute;inset:0;background:rgba(4,4,6,.92);backdrop-filter:blur(16px)}
+.modal{position:relative;z-index:1;width:min(560px,96vw);max-height:94svh;background:var(--sur);border:1px solid var(--brd2);display:flex;flex-direction:column;animation:modalIn .28s ease;overflow:hidden}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,var(--gold) 50%,transparent 100%)}
+.mhdr{padding:1.4rem 2rem 1.1rem;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
+.mlogo{display:flex;align-items:center;gap:.65rem}
+.mlogo-mark{width:28px;height:28px;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700}
+.mlogo-text{font-family:'Playfair Display',serif;font-size:.85rem;letter-spacing:.06em}
+.mclose{background:none;border:1px solid var(--brd);color:var(--mut);width:28px;height:28px;border-radius:50%;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.mclose:hover{border-color:rgba(255,255,255,.4);color:var(--txt)}
+.steps-bar{display:flex;padding:.65rem 2rem;gap:.4rem;border-bottom:1px solid var(--brd)}
+.sdot{flex:1;height:1.5px;background:rgba(255,255,255,.07);transition:background .3s}
+.sdot.active{background:var(--gold)}
+.sdot.done{background:var(--gold);opacity:.35}
+.mbody{flex:1;overflow-y:auto;padding:2rem}
+.mbody::-webkit-scrollbar{width:3px}
+.mbody::-webkit-scrollbar-thumb{background:rgba(200,169,110,.3)}
+.step{display:none}
+.step.active{display:block}
+.step-num{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;opacity:.8}
+.step-ttl{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;margin-bottom:1.5rem;line-height:1.1}
+.step-ttl em{font-style:italic;color:var(--gold)}
+.step-hint{font-size:.7rem;color:var(--mut);margin-bottom:1.3rem;margin-top:-.8rem}
+
+/* Opts */
+.sopts{display:flex;flex-direction:column;gap:.4rem}
+.sopt{border:1px solid var(--brd);padding:1rem 1.2rem;cursor:none;transition:all .18s;display:flex;justify-content:space-between;align-items:center;background:var(--bg)}
+.sopt:hover{border-color:var(--brd2);background:var(--sur)}
+.sopt.sel{border-color:var(--gold);background:rgba(200,169,110,.05)}
+.opt-name{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400}
+.opt-dur{font-size:.6rem;letter-spacing:.12em;color:var(--mut);margin-top:.1rem}
+.opt-price{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--gold)}
+
+/* Cal */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.cal-nav button{background:var(--bg);border:1px solid var(--brd);color:var(--txt);width:30px;height:30px;font-size:.9rem;cursor:none;transition:all .18s}
+.cal-nav button:hover{border-color:var(--gold);color:var(--gold)}
+.cal-month{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;text-transform:capitalize;color:var(--acc)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:1.5rem}
+.cal-dh{text-align:center;font-size:.56rem;letter-spacing:.12em;color:var(--mut);padding:.35rem 0;text-transform:uppercase}
+.cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.78rem;cursor:none;transition:all .14s;position:relative}
+.cal-d.empty,.cal-d.past,.cal-d.unavail{cursor:default;color:rgba(255,255,255,.12);pointer-events:none}
+.cal-d.avail:hover{background:rgba(200,169,110,.12);color:var(--acc)}
+.cal-d.sel{background:var(--gold);color:#080808;font-weight:500}
+.cal-d.today::after{content:'';position:absolute;bottom:3px;width:3px;height:3px;border-radius:50%;background:var(--gold)}
+.cal-d.sel.today::after{background:#080808}
+.time-lbl{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem;opacity:.8}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.slot{border:1px solid var(--brd);padding:.45rem;text-align:center;font-size:.74rem;cursor:none;transition:all .14s;background:var(--bg)}
+.slot:hover{border-color:var(--gold);color:var(--gold)}
+.slot.sel{background:var(--gold);color:#080808;border-color:var(--gold)}
+.slot.bkd{opacity:.15;cursor:not-allowed;pointer-events:none}
+
+/* Form */
+.fg{margin-bottom:1.15rem}
+.flbl{display:block;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem;opacity:.8}
+.finp,.ftxt{width:100%;background:transparent;border:none;border-bottom:1px solid var(--brd);color:var(--txt);padding:.65rem 0;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:300;outline:none;transition:border-color .18s}
+.finp:focus,.ftxt:focus{border-color:rgba(200,169,110,.5)}
+.ftxt{resize:vertical;min-height:70px;border:1px solid var(--brd);padding:.65rem .8rem}
+
+/* Confirm */
+.csum{border:1px solid var(--brd)}
+.csum-row{display:flex;justify-content:space-between;align-items:baseline;padding:.75rem 1.1rem;border-bottom:1px solid var(--brd)}
+.csum-row:last-child{border-bottom:none}
+.csum-k{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mut)}
+.csum-v{font-family:'Playfair Display',serif;font-size:1.05rem;text-align:right;max-width:65%}
+
+/* Success */
+.success{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3.5rem 2rem;gap:1.75rem;min-height:320px}
+.success.show{display:flex}
+.suc-icon{width:56px;height:56px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--gold);animation:sucPulse 2s ease-in-out infinite}
+@keyframes sucPulse{0%,100%{box-shadow:0 0 0 0 rgba(200,169,110,.3)}50%{box-shadow:0 0 0 12px rgba(200,169,110,0)}}
+.suc-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1.2}
+.suc-title em{font-style:italic;color:var(--gold)}
+.suc-sub{font-size:.72rem;color:var(--mut);letter-spacing:.06em}
+.btn-wa{display:inline-flex;align-items:center;gap:.5rem;background:#25d366;color:#fff;border:none;padding:.72rem 1.5rem;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-family:'Outfit',sans-serif;cursor:none;transition:opacity .2s}
+.btn-wa:hover{opacity:.85}
+.btn-sec{background:none;border:1px solid var(--brd);color:var(--mut);padding:.55rem 1.1rem;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;cursor:none;font-family:'Outfit',sans-serif;transition:all .2s}
+.btn-sec:hover{border-color:var(--brd2);color:var(--txt)}
+
+.mfoot{padding:.9rem 2rem;border-top:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
+.btn-back{background:none;border:none;color:var(--mut);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;cursor:none;font-family:'Outfit',sans-serif;transition:color .18s}
+.btn-back:hover{color:var(--txt)}
+.btn-back:disabled{opacity:.2;cursor:not-allowed}
+.btn-next{background:var(--txt);border:none;color:#080808;padding:.68rem 1.75rem;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;font-weight:500;font-family:'Outfit',sans-serif;cursor:none;transition:opacity .2s;position:relative;overflow:hidden}
+.btn-next:hover:not(:disabled){opacity:.88}
+.btn-next:disabled{opacity:.25;cursor:not-allowed}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes modalIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+@media(max-width:640px){
+  nav{padding:0 1.25rem}.nav-links{display:none}
+  .hero{padding:6rem 1.25rem 3rem}.hero-deco{display:none}.hero-bg-letter{display:none}.scroll-ind{display:none}
+  .services{padding:4.5rem 1.25rem}
+  .strip{grid-template-columns:1fr 1fr}
+  .strip-item{padding:1.5rem 1.25rem}
+  footer{padding:1.5rem 1.25rem;flex-direction:column;gap:.75rem;text-align:center}
+  .mbody{padding:1.4rem}.mhdr{padding:1rem 1.4rem}.steps-bar{padding:.6rem 1.4rem}.mfoot{padding:.8rem 1.4rem}
+  .slots{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur2" id="cur2"></div>
+<div class="grid-lines"><div class="gl"></div><div class="gl"></div><div class="gl"></div><div class="gl"></div></div>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-mark">GC</div>
+    <div class="nav-brand"><span class="nav-brand-name">Hair Concept</span><span class="nav-brand-sub">Gonzalo Cortez</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a id="nav-ig" href="#" target="_blank">Instagram</a></li>
+  </ul>
+  <button class="btn-nav" onclick="openModal()">Reservar turno</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg-letter">G</div>
+  <div class="hero-body">
+    <div class="hero-kicker"><div class="kicker-line"></div><span class="kicker-text" id="hero-kicker">Peluquero Colorista · Villa del Parque</span></div>
+    <h1 class="hero-title">
+      <span class="ht-1">GC</span>
+      <span class="ht-2">Hair</span>
+      <span class="ht-3">Concept</span>
+    </h1>
+    <p class="hero-desc" id="hero-desc">Colorización artística. Cortes con identidad. Resultados únicos.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="openModal()">Reservar turno →</button>
+      <a class="btn-ghost" href="#servicios">Ver servicios</a>
+    </div>
+  </div>
+  <div class="hero-deco">
+    <div><div class="hd-num">8+</div><div class="hd-lbl">Años de experiencia</div></div>
+    <div class="hd-line"></div>
+    <div><div class="hd-num">500+</div><div class="hd-lbl">Clientes felices</div></div>
+    <div class="hd-line"></div>
+    <div><div class="hd-num">100%</div><div class="hd-lbl">Arte en cada corte</div></div>
+  </div>
+  <div class="hero-foot">
+    <div class="hf-item"><span class="hfi-lbl">Dirección</span><span class="hfi-val" id="hi-addr">Simbron 3212, Villa del Parque</span></div>
+    <div class="hf-item"><span class="hfi-lbl">Horarios</span><span class="hfi-val" id="hi-hours">Mar–Sab · 10 a 20hs</span></div>
+    <div class="hf-item"><span class="hfi-lbl">Instagram</span><span class="hfi-val"><a id="hi-ig" href="#" target="_blank">@gonzalocortez.hc</a></span></div>
+  </div>
+  <div class="scroll-ind"><span class="si-text">Scroll</span><div class="si-bar"></div></div>
+</section>
+
+<div class="mqw">
+  <div class="mqt">
+    <span>GC Hair Concept</span><span class="g">◆</span><span>Peluquero Colorista</span><span class="g">◆</span><span>Villa del Parque</span><span class="g">◆</span><span>Colorización Artística</span><span class="g">◆</span><span>Cortes con Identidad</span><span class="g">◆</span><span>Rubio · Colorado · Fantasía</span><span class="g">◆</span><span>Reservá tu turno</span><span class="g">◆</span>
+    <span>GC Hair Concept</span><span class="g">◆</span><span>Peluquero Colorista</span><span class="g">◆</span><span>Villa del Parque</span><span class="g">◆</span><span>Colorización Artística</span><span class="g">◆</span><span>Cortes con Identidad</span><span class="g">◆</span><span>Rubio · Colorado · Fantasía</span><span class="g">◆</span><span>Reservá tu turno</span><span class="g">◆</span>
+  </div>
+</div>
+
+<section class="services" id="servicios">
+  <div class="sec-header">
+    <div class="sec-left">
+      <p class="sec-pre">Lo que hacemos</p>
+      <h2 class="sec-title">Nuestros <em>servicios</em></h2>
+    </div>
+    <span class="sec-right">Precios &amp; servicios</span>
+  </div>
+  <div class="srv-grid" id="srv-grid"></div>
+</section>
+
+<div class="strip">
+  <div class="strip-item"><span class="si-lbl">Dirección</span><span class="si-val" id="si-addr">Simbron 3212, Villa del Parque</span></div>
+  <div class="strip-item"><span class="si-lbl">Horarios</span><span class="si-val" id="si-hours">Mar–Sab · 10 a 20hs</span></div>
+  <div class="strip-item"><span class="si-lbl">Instagram</span><span class="si-val"><a id="si-ig" href="#" target="_blank">@gonzalocortez.hc</a></span></div>
+  <div class="strip-item"><span class="si-lbl">Reservas</span><span class="si-val"><a href="#" onclick="openModal();return false" style="color:var(--gold)">Agendá tu turno →</a></span></div>
+</div>
+
+<footer>
+  <div class="foot-left">
+    <div class="foot-mark">GC</div>
+    <span class="foot-name">Hair Concept</span>
+  </div>
+  <div class="foot-right">
+    <span class="foot-copy" id="foot-copy">© 2025 GC Hair Concept · Gonzalo Cortez</span>
+    <a class="foot-ig" id="foot-ig" href="#" target="_blank">@gonzalocortez.hc</a>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="moverlay" id="moverlay">
+  <div class="mback" onclick="closeModal()"></div>
+  <div class="modal">
+    <div class="mhdr">
+      <div class="mlogo"><div class="mlogo-mark">GC</div><span class="mlogo-text">Hair Concept</span></div>
+      <button class="mclose" onclick="closeModal()">×</button>
+    </div>
+    <div class="steps-bar"><div class="sdot active" id="dot1"></div><div class="sdot" id="dot2"></div><div class="sdot" id="dot3"></div><div class="sdot" id="dot4"></div></div>
+    <div class="mbody" id="mbody">
+      <div class="step active" id="step1"><p class="step-num">Paso 01 / 04</p><h3 class="step-ttl">¿Qué <em>servicio</em> necesitás?</h3><p class="step-hint">Seleccioná una opción</p><div class="sopts" id="sopts"></div></div>
+      <div class="step" id="step2"><p class="step-num">Paso 02 / 04</p><h3 class="step-ttl">¿Cuándo <em>venís?</em></h3><p class="step-hint">Martes a Sábado · 10 a 20hs</p><div class="cal-nav"><button onclick="prevMonth()">‹</button><span class="cal-month" id="calLabel"></span><button onclick="nextMonth()">›</button></div><div class="cal-grid" id="calGrid"></div><div id="timeSec" style="display:none"><p class="time-lbl">Horarios disponibles</p><div class="slots" id="slotsGrid"></div></div></div>
+      <div class="step" id="step3"><p class="step-num">Paso 03 / 04</p><h3 class="step-ttl">Tus <em>datos</em></h3><p class="step-hint">Para confirmar la reserva</p><div class="fg"><label class="flbl">Nombre y apellido *</label><input class="finp" id="iName" type="text" placeholder="Juan Pérez"></div><div class="fg"><label class="flbl">WhatsApp *</label><input class="finp" id="iWa" type="tel" placeholder="11 1234-5678"></div><div class="fg"><label class="flbl">Email</label><input class="finp" id="iEmail" type="email" placeholder="juan@email.com"></div><div class="fg"><label class="flbl">Aclaraciones</label><textarea class="ftxt" id="iNotes" placeholder="Algún detalle..."></textarea></div></div>
+      <div class="step" id="step4"><p class="step-num">Paso 04 / 04</p><h3 class="step-ttl">Confirmá tu <em>turno</em></h3><p class="step-hint">Revisá los datos</p><div class="csum" id="csum"></div></div>
+    </div>
+    <div class="success" id="successScr">
+      <div class="suc-icon">✓</div>
+      <div><h3 class="suc-title">¡Turno <em>confirmado!</em></h3><p class="suc-sub" style="margin-top:.5rem">Te contactaremos para confirmar</p></div>
+      <a class="btn-wa" id="waLink" href="#" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp</a>
+      <button class="btn-sec" onclick="newBooking()">Nuevo turno</button>
+    </div>
+    <div class="mfoot" id="mfoot"><button class="btn-back" id="btnBack" onclick="prevStep()" disabled>← Volver</button><button class="btn-next" id="btnNext" onclick="nextStep()" disabled>Continuar →</button></div>
+  </div>
+</div>
+
+<script>
+const c=document.getElementById('cur'),c2=document.getElementById('cur2');
+document.addEventListener('mousemove',e=>{c.style.left=e.clientX+'px';c.style.top=e.clientY+'px';setTimeout(()=>{c2.style.left=e.clientX+'px';c2.style.top=e.clientY+'px';},80);});
+document.querySelectorAll('button,a,.sopt,.srv-card,.slot,.cal-d.avail').forEach(el=>{el.addEventListener('mouseenter',()=>{c.style.width='16px';c.style.height='16px';c2.style.width='46px';c2.style.height='46px';});el.addEventListener('mouseleave',()=>{c.style.width='8px';c.style.height='8px';c2.style.width='32px';c2.style.height='32px';});});
+
+const DEF_SRV=[{id:1,name:'Corte',price:15000,duration:45},{id:2,name:'Coloración',price:35000,duration:120},{id:3,name:'Balayage',price:45000,duration:150},{id:4,name:'Mechas',price:40000,duration:120},{id:5,name:'Tinte',price:25000,duration:60},{id:6,name:'Tratamiento',price:12000,duration:30}];
+const DEF_TXT={heroSubtitle:'Peluquero Colorista · Villa del Parque',heroDesc:'Colorización artística. Cortes con identidad. Resultados únicos.',footerText:'© 2025 GC Hair Concept · Gonzalo Cortez',address:'Simbron 3212, Villa del Parque',hours:'Mar–Sab · 10 a 20hs',instagram:'gonzalocortez.hc',whatsapp:'5491100000000'};
+const getSrv=()=>JSON.parse(localStorage.getItem('gc_services')||'null')||DEF_SRV;
+const getTxt=()=>Object.assign({},DEF_TXT,JSON.parse(localStorage.getItem('gc_texts')||'{}'));
+const getAppts=()=>JSON.parse(localStorage.getItem('gc_appointments')||'[]');
+const saveAppt=a=>{const all=getAppts();all.push(a);localStorage.setItem('gc_appointments',JSON.stringify(all));};
+function initPage(){const T=getTxt();document.getElementById('hero-kicker').textContent=T.heroSubtitle;document.getElementById('hero-desc').textContent=T.heroDesc;document.getElementById('hi-addr').textContent=T.address;document.getElementById('hi-hours').textContent=T.hours;['hi-ig','si-ig','nav-ig','foot-ig'].forEach(id=>{const el=document.getElementById(id);if(el){if(id!=='nav-ig')el.textContent='@'+T.instagram;el.href='https://instagram.com/'+T.instagram;}});document.getElementById('foot-copy').textContent=T.footerText;document.getElementById('si-addr').textContent=T.address;document.getElementById('si-hours').textContent=T.hours;renderSrvGrid();}
+function renderSrvGrid(){document.getElementById('srv-grid').innerHTML=getSrv().map((s,i)=>`<div class="srv-card" onclick="openModal(${s.id})"><div class="srv-num">0${i+1}</div><div class="srv-name">${s.name}</div><div class="srv-dur">${s.duration} min</div><div class="srv-bottom"><div class="srv-price">$${s.price.toLocaleString('es-AR')}<small>ARS</small></div><div class="srv-cta">→</div></div></div>`).join('');}
+let curStep=1,bk={},calY,calM;
+function openModal(preId=null){resetBk();if(preId)selSrv(preId);renderSopts();document.getElementById('moverlay').classList.add('open');document.body.style.overflow='hidden';goStep(1);}
+function closeModal(){document.getElementById('moverlay').classList.remove('open');document.body.style.overflow='';}
+function resetBk(){bk={sid:null,sname:'',sprice:0,sdur:0,date:'',time:'',name:'',wa:'',email:'',notes:''};document.getElementById('successScr').classList.remove('show');document.getElementById('mbody').style.display='';document.getElementById('mfoot').style.display='';document.querySelector('.steps-bar').style.display='';['iName','iWa','iEmail','iNotes'].forEach(id=>document.getElementById(id).value='');const n=new Date();calY=n.getFullYear();calM=n.getMonth();}
+function renderSopts(){document.getElementById('sopts').innerHTML=getSrv().map(s=>`<div class="sopt ${bk.sid===s.id?'sel':''}" onclick="selSrv(${s.id})" id="opt${s.id}"><div><div class="opt-name">${s.name}</div><div class="opt-dur">${s.duration} min</div></div><div class="opt-price">$${s.price.toLocaleString('es-AR')}</div></div>`).join('');}
+function selSrv(id){const s=getSrv().find(x=>x.id===id);if(!s)return;Object.assign(bk,{sid:s.id,sname:s.name,sprice:s.price,sdur:s.duration});document.querySelectorAll('.sopt').forEach(e=>e.classList.remove('sel'));const el=document.getElementById('opt'+id);if(el)el.classList.add('sel');updNext();}
+function goStep(n){document.querySelectorAll('.step').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.sdot').forEach((d,i)=>{d.classList.remove('active','done');if(i+1<n)d.classList.add('done');else if(i+1===n)d.classList.add('active');});curStep=n;document.getElementById('step'+n).classList.add('active');document.getElementById('btnBack').disabled=n===1;document.getElementById('btnNext').textContent=n===4?'Confirmar →':'Continuar →';if(n===2)renderCal();if(n===4)renderCsum();updNext();document.getElementById('mbody').scrollTop=0;}
+function nextStep(){if(curStep===3){const nm=document.getElementById('iName').value.trim(),wa=document.getElementById('iWa').value.trim();if(!nm||!wa){alert('Por favor completá nombre y WhatsApp.');return;}bk.name=nm;bk.wa=wa;bk.email=document.getElementById('iEmail').value.trim();bk.notes=document.getElementById('iNotes').value.trim();}if(curStep===4){confirmBk();return;}if(curStep<4)goStep(curStep+1);}
+function prevStep(){if(curStep>1)goStep(curStep-1);}
+function updNext(){const d=document.getElementById('btnNext');if(curStep===1)d.disabled=!bk.sid;else if(curStep===2)d.disabled=!bk.date||!bk.time;else d.disabled=false;}
+const DAYS=['D','L','M','X','J','V','S'],MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],AVAIL=[2,3,4,5,6];
+function renderCal(){document.getElementById('calLabel').textContent=MONTHS[calM]+' '+calY;const fd=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate(),today=new Date();today.setHours(0,0,0,0);let h=DAYS.map(d=>`<div class="cal-dh">${d}</div>`).join('');for(let i=0;i<fd;i++)h+=`<div class="cal-d empty"></div>`;for(let d=1;d<=dim;d++){const dt=new Date(calY,calM,d),dow=dt.getDay();const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isPast=dt<today,isAvail=AVAIL.includes(dow)&&!isPast,isToday=dt.getTime()===today.getTime();let c='cal-d';if(isToday)c+=' today';if(isPast)c+=' past';else if(!AVAIL.includes(dow))c+=' unavail';else c+=' avail';if(bk.date===ds)c+=' sel';h+=`<div class="${c}" ${isAvail?`onclick="selDate('${ds}')"`:''}>${d}</div>`;}document.getElementById('calGrid').innerHTML=h;if(bk.date)renderSlots();}
+function prevMonth(){calM--;if(calM<0){calM=11;calY--;}renderCal();}
+function nextMonth(){calM++;if(calM>11){calM=0;calY++;}renderCal();}
+function selDate(ds){bk.date=ds;bk.time='';renderCal();document.getElementById('timeSec').style.display='block';renderSlots();updNext();}
+function genSlots(dur){const s=[],start=10*60,end=20*60-dur;for(let t=start;t<=end;t+=30)s.push(`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`);return s;}
+function toMin(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
+function isBooked(ds,ts,dur){const as=getAppts().filter(a=>a.status!=='cancelado'&&a.date===ds),ss=toMin(ts),se=ss+dur;return as.some(a=>{const as2=toMin(a.time),ae=as2+a.sdur;return ss<ae&&se>as2;});}
+function renderSlots(){document.getElementById('slotsGrid').innerHTML=genSlots(bk.sdur).map(t=>{const bkd=isBooked(bk.date,t,bk.sdur),sel=bk.time===t;return`<div class="slot ${bkd?'bkd':''} ${sel?'sel':''}" ${!bkd?`onclick="selTime('${t}')"`:''}>${t}</div>`;}).join('');}
+function selTime(t){bk.time=t;renderSlots();updNext();}
+function renderCsum(){const dObj=new Date(bk.date+'T12:00:00'),df=dObj.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});const rows=[{k:'Servicio',v:bk.sname},{k:'Precio',v:'$'+bk.sprice.toLocaleString('es-AR')+' ARS'},{k:'Fecha',v:df.charAt(0).toUpperCase()+df.slice(1)},{k:'Horario',v:bk.time+' hs'},{k:'Nombre',v:bk.name},{k:'WhatsApp',v:bk.wa}];if(bk.email)rows.push({k:'Email',v:bk.email});if(bk.notes)rows.push({k:'Aclaraciones',v:bk.notes});document.getElementById('csum').innerHTML=rows.map(r=>`<div class="csum-row"><span class="csum-k">${r.k}</span><span class="csum-v">${r.v}</span></div>`).join('');}
+function confirmBk(){const appt={id:Date.now().toString(),...bk,status:'pendiente',createdAt:new Date().toISOString()};saveAppt(appt);const T=getTxt();const dObj=new Date(bk.date+'T12:00:00');const df=dObj.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});const msg=encodeURIComponent(`Hola Gonzalo! Reservé un turno:\n\n*Servicio:* ${bk.sname}\n*Fecha:* ${df}\n*Hora:* ${bk.time} hs\n*Nombre:* ${bk.name}`);document.getElementById('waLink').href=`https://wa.me/${T.whatsapp}?text=${msg}`;document.getElementById('mbody').style.display='none';document.getElementById('mfoot').style.display='none';document.querySelector('.steps-bar').style.display='none';document.getElementById('successScr').classList.add('show');}
+function newBooking(){document.getElementById('mbody').style.display='';document.getElementById('mfoot').style.display='';document.querySelector('.steps-bar').style.display='';document.getElementById('successScr').classList.remove('show');resetBk();renderSopts();goStep(1);}
+initPage();
+</script>
+</body>
+</html>

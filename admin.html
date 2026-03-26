@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — GC Hair Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080808;--bg2:#101010;--sur:#141414;--sur2:#1c1c1c;
+  --brd:rgba(255,255,255,.07);--brd2:rgba(255,255,255,.13);
+  --txt:#f2f0ec;--mut:rgba(242,240,236,.4);--mut2:rgba(242,240,236,.2);
+  --acc:#e8e0d0;--gold:#c8a96e;--goldl:#e8c98e;
+  --green:#4caf80;--red:#e05252;--yellow:#d4a84b;
+  --sb:210px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;font-weight:300}
+a{text-decoration:none;color:inherit}
+button{font-family:'Outfit',sans-serif;cursor:pointer}
+input,textarea{font-family:'Outfit',sans-serif}
+
+/* NOISE */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:500;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
+
+/* LOGIN */
+#loginScr{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden}
+#loginScr::after{content:'';position:absolute;width:800px;height:800px;background:radial-gradient(circle,rgba(200,169,110,.05),transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.login-box{position:relative;z-index:1;width:min(360px,92vw);background:var(--sur);border:1px solid var(--brd2);padding:2.75rem 2.5rem;overflow:hidden}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.l-logo{display:flex;align-items:center;gap:.85rem;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--brd)}
+.l-mark{width:36px;height:36px;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;position:relative}
+.l-mark::after{content:'';position:absolute;inset:3px;background:rgba(255,255,255,.03)}
+.l-brand-name{font-family:'Playfair Display',serif;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;display:block;font-weight:400}
+.l-brand-sub{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;opacity:.8}
+.l-ttl{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;margin-bottom:.3rem}
+.l-ttl em{font-style:italic;color:var(--gold)}
+.l-sub{font-size:.68rem;color:var(--mut);letter-spacing:.06em;margin-bottom:1.75rem}
+.l-lbl{display:block;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem;opacity:.8}
+.l-inp{width:100%;background:var(--bg);border:1px solid var(--brd);color:var(--txt);padding:.75rem 1rem;font-size:.9rem;font-weight:300;outline:none;transition:border-color .2s}
+.l-inp:focus{border-color:rgba(200,169,110,.4)}
+.l-btn{width:100%;background:var(--txt);border:none;color:#080808;padding:.78rem;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;margin-top:.75rem;transition:opacity .2s}
+.l-btn:hover{opacity:.88}
+.l-err{display:none;font-size:.72rem;color:var(--red);margin-top:.75rem;text-align:center;letter-spacing:.04em}
+.l-err.show{display:block}
+
+/* APP */
+#adminApp{display:none;min-height:100vh}
+#adminApp.show{display:flex}
+
+/* SIDEBAR */
+.sidebar{width:var(--sb);flex-shrink:0;background:var(--sur);border-right:1px solid var(--brd);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;overflow-y:auto;z-index:50}
+.sb-logo{padding:1.6rem 1.4rem 1.35rem;border-bottom:1px solid var(--brd)}
+.sb-logo-row{display:flex;align-items:center;gap:.7rem}
+.sb-mark{width:32px;height:32px;border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;position:relative}
+.sb-mark::after{content:'';position:absolute;inset:3px;background:rgba(255,255,255,.03)}
+.sb-brand-name{font-family:'Playfair Display',serif;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;display:block;font-weight:400}
+.sb-brand-sub{font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;opacity:.7}
+.sb-nav{flex:1;padding:.75rem 0}
+.sb-sec-lbl{font-size:.5rem;letter-spacing:.26em;text-transform:uppercase;color:var(--mut2);padding:.65rem 1.4rem .2rem;display:block;margin-top:.4rem}
+.sb-item{display:flex;align-items:center;gap:.6rem;padding:.55rem 1.4rem;font-size:.7rem;letter-spacing:.06em;color:var(--mut);cursor:pointer;transition:all .16s;position:relative;user-select:none}
+.sb-item:hover{color:var(--acc);background:rgba(255,255,255,.02)}
+.sb-item.active{color:var(--txt);background:rgba(255,255,255,.04)}
+.sb-item.active::before{content:'';position:absolute;left:0;top:15%;bottom:15%;width:1.5px;background:var(--gold)}
+.sb-ico{font-size:.6rem;opacity:.4;flex-shrink:0;transition:opacity .16s}
+.sb-item.active .sb-ico{opacity:.8}
+.sb-cnt{margin-left:auto;background:rgba(200,169,110,.15);color:var(--gold);font-size:.55rem;padding:.1rem .45rem;min-width:18px;text-align:center;border:1px solid rgba(200,169,110,.2)}
+.sb-foot{padding:1.1rem 1.4rem;border-top:1px solid var(--brd);display:flex;flex-direction:column;gap:.5rem}
+.sb-site{display:block;border:1px solid var(--brd2);color:var(--mut);text-align:center;padding:.5rem;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;transition:all .2s}
+.sb-site:hover{border-color:rgba(200,169,110,.4);color:var(--gold)}
+.sb-logout{background:none;border:none;color:var(--mut2);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;text-align:center;transition:color .2s;padding:.3rem}
+.sb-logout:hover{color:var(--red)}
+
+/* MAIN */
+.main{margin-left:var(--sb);flex:1;min-height:100vh}
+.page{display:none;padding:2.75rem 3.25rem;max-width:1050px}
+.page.active{display:block}
+.page-ttl{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:700;margin-bottom:.2rem;line-height:1.1}
+.page-ttl em{font-style:italic;color:var(--gold)}
+.page-sub{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);margin-bottom:2.25rem}
+.divider{height:1px;background:var(--brd);margin-bottom:2rem}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--brd);margin-bottom:2.5rem}
+.stat{background:var(--sur);padding:1.5rem 1.25rem;position:relative;overflow:hidden;transition:background .2s}
+.stat:hover{background:var(--sur2)}
+.stat::after{content:'';position:absolute;bottom:0;left:1.25rem;right:1.25rem;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5}
+.stat-val{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;line-height:1;margin-bottom:.35rem;color:var(--acc)}
+.stat-lbl{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mut)}
+
+/* SECTION TITLE */
+.stl{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:1.1rem}
+.stl em{font-style:italic;color:var(--gold)}
+
+/* APPT CARDS */
+.appt-list{display:flex;flex-direction:column;gap:.5rem}
+.appt-card{background:var(--sur);border:1px solid var(--brd);padding:1.25rem 1.5rem;transition:border-color .2s;position:relative;overflow:hidden}
+.appt-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1.5px;background:var(--gold);opacity:.5}
+.appt-card:hover{border-color:var(--brd2)}
+.appt-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.75rem}
+.appt-srv{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700}
+.appt-price{font-size:.65rem;color:var(--mut);margin-top:.15rem;letter-spacing:.04em}
+.badge{display:inline-flex;align-items:center;padding:.18rem .7rem;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase}
+.badge.pendiente{background:rgba(212,168,75,.1);color:var(--yellow);border:1px solid rgba(212,168,75,.2)}
+.badge.confirmado{background:rgba(76,175,128,.1);color:var(--green);border:1px solid rgba(76,175,128,.2)}
+.badge.cancelado{background:rgba(224,82,82,.08);color:var(--red);border:1px solid rgba(224,82,82,.18)}
+.appt-info-row{display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:.8rem}
+.ai{display:flex;flex-direction:column;gap:.12rem}
+.ai-lbl{font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut2)}
+.ai-val{font-size:.8rem;color:var(--mut)}
+.ai-val a{color:var(--green);transition:opacity .2s}
+.ai-val a:hover{opacity:.7}
+.appt-actions{display:flex;gap:.35rem;flex-wrap:wrap;padding-top:.65rem;border-top:1px solid var(--brd)}
+.btn-a{background:none;border:1px solid var(--brd);color:var(--mut);padding:.3rem .85rem;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;transition:all .18s;font-family:'Outfit',sans-serif}
+.btn-a:hover{border-color:var(--brd2);color:var(--acc)}
+.btn-a.ok:hover{border-color:rgba(76,175,128,.5);color:var(--green)}
+.btn-a.no:hover{border-color:rgba(224,82,82,.5);color:var(--red)}
+.btn-a.wa{text-decoration:none;display:inline-flex;align-items:center;gap:.3rem}
+.btn-a.wa:hover{border-color:rgba(76,175,128,.4);color:var(--green)}
+.empty-s{text-align:center;padding:3rem;border:1px solid var(--brd);background:var(--sur)}
+.empty-s p{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300;color:var(--mut)}
+
+/* FILTERS */
+.filter-bar{display:flex;gap:.35rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center}
+.ftab{background:none;border:1px solid var(--brd);color:var(--mut);padding:.38rem .9rem;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;transition:all .18s;font-family:'Outfit',sans-serif}
+.ftab:hover{border-color:var(--brd2);color:var(--acc)}
+.ftab.active{border-color:rgba(200,169,110,.4);color:var(--gold);background:rgba(200,169,110,.06)}
+.f-date{background:var(--sur);border:1px solid var(--brd);color:var(--txt);padding:.36rem .7rem;font-size:.78rem;outline:none;transition:border-color .2s}
+.f-date:focus{border-color:rgba(200,169,110,.4)}
+.btn-f{background:var(--txt);border:none;color:#080808;padding:.38rem .9rem;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;transition:opacity .2s;font-family:'Outfit',sans-serif}
+.btn-f:hover{opacity:.85}
+.btn-fc{background:none;border:1px solid var(--brd);color:var(--mut);padding:.38rem .85rem;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;transition:all .18s;font-family:'Outfit',sans-serif}
+.btn-fc:hover{border-color:var(--brd2);color:var(--acc)}
+
+/* SRV EDITOR */
+.srv-editor{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.srv-row{display:grid;grid-template-columns:1fr 120px 120px 32px;gap:.6rem;align-items:end;background:var(--sur);border:1px solid var(--brd);padding:.85rem 1rem;transition:border-color .2s}
+.srv-row:hover{border-color:var(--brd2)}
+.srv-field{display:flex;flex-direction:column;gap:.3rem}
+.srv-field-lbl{font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);opacity:.7}
+.srv-inp{width:100%;background:transparent;border:none;border-bottom:1px solid var(--brd);color:var(--txt);padding:.5rem 0;font-size:.88rem;font-weight:300;outline:none;transition:border-color .2s;font-family:'Outfit',sans-serif}
+.srv-inp:focus{border-color:rgba(200,169,110,.4)}
+.srv-inp[type=number]{-moz-appearance:textfield}
+.srv-inp[type=number]::-webkit-outer-spin-button,.srv-inp[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.btn-rm{background:none;border:1px solid var(--brd);color:var(--mut);width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .18s;align-self:flex-end}
+.btn-rm:hover{border-color:rgba(224,82,82,.4);color:var(--red)}
+.btn-add-srv{background:none;border:1px dashed var(--brd);color:var(--mut);padding:.75rem;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;width:100%;transition:all .18s;margin-bottom:1.5rem;font-family:'Outfit',sans-serif}
+.btn-add-srv:hover{border-color:rgba(200,169,110,.4);color:var(--gold)}
+
+/* TXT EDITOR */
+.txt-section{background:var(--sur);border:1px solid var(--brd);padding:1.75rem 2rem;margin-bottom:1rem;position:relative;overflow:hidden}
+.txt-section::before{content:'';position:absolute;top:0;left:2rem;right:2rem;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5}
+.ts-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--brd);color:var(--acc)}
+.form-grid{display:grid;gap:1.25rem}
+.form-grid.col2{grid-template-columns:1fr 1fr}
+.tfg{display:flex;flex-direction:column;gap:.35rem}
+.t-lbl{font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);opacity:.8}
+.t-inp,.t-txt{width:100%;background:transparent;border:none;border-bottom:1px solid var(--brd);color:var(--txt);padding:.6rem 0;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:300;outline:none;transition:border-color .2s}
+.t-inp:focus,.t-txt:focus{border-color:rgba(200,169,110,.4)}
+.t-txt{resize:vertical;min-height:65px;border:1px solid var(--brd);padding:.6rem .8rem}
+
+/* SAVE */
+.save-row{display:flex;align-items:center;gap:.85rem;margin-top:1.5rem}
+.btn-save{background:var(--txt);border:none;color:#080808;padding:.72rem 1.75rem;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;transition:opacity .2s;font-family:'Outfit',sans-serif}
+.btn-save:hover{opacity:.88}
+.save-ok{display:none;font-size:.68rem;letter-spacing:.1em;color:var(--green)}
+.save-ok.show{display:inline}
+
+/* PW */
+.pw-wrap{background:var(--sur);border:1px solid var(--brd);padding:1.75rem 2rem;max-width:420px;position:relative;overflow:hidden}
+.pw-wrap::before{content:'';position:absolute;top:0;left:2rem;right:2rem;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5}
+.pw-form{display:flex;flex-direction:column;gap:1.1rem}
+
+*::-webkit-scrollbar{width:4px}
+*::-webkit-scrollbar-thumb{background:rgba(200,169,110,.15)}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06)}
+
+@media(max-width:768px){
+  :root{--sb:0px}
+  .sidebar{position:relative;width:100%;height:auto;flex-direction:row;overflow:visible;flex-wrap:wrap}
+  .sb-nav{display:flex;flex-wrap:wrap;padding:.4rem}
+  .sb-item{padding:.45rem .75rem}
+  .sb-sec-lbl{display:none}
+  #adminApp.show{flex-direction:column}
+  .main{margin-left:0}
+  .page{padding:1.5rem 1.1rem}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .srv-row{grid-template-columns:1fr auto auto auto}
+  .form-grid.col2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="loginScr">
+  <div class="login-box">
+    <div class="l-logo">
+      <div class="l-mark">GC</div>
+      <div><span class="l-brand-name">Hair Concept</span><span class="l-brand-sub">Admin Panel</span></div>
+    </div>
+    <h2 class="l-ttl">Panel <em>Admin</em></h2>
+    <p class="l-sub">GC Hair Concept</p>
+    <label class="l-lbl">Contraseña</label>
+    <input class="l-inp" id="pwInput" type="password" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="l-btn" onclick="doLogin()">Ingresar</button>
+    <p class="l-err" id="loginErr">Contraseña incorrecta</p>
+  </div>
+</div>
+
+<div id="adminApp">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-row">
+        <div class="sb-mark">GC</div>
+        <div><span class="sb-brand-name">Hair Concept</span><span class="sb-brand-sub">Admin</span></div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <span class="sb-sec-lbl">Turnos</span>
+      <div class="sb-item active" id="nav-dashboard" onclick="showPage('dashboard')"><span class="sb-ico">◈</span> Dashboard</div>
+      <div class="sb-item" id="nav-hoy" onclick="showPage('hoy')"><span class="sb-ico">○</span> Hoy <span class="sb-cnt" id="cntHoy">0</span></div>
+      <div class="sb-item" id="nav-proximos" onclick="showPage('proximos')"><span class="sb-ico">○</span> Próximos <span class="sb-cnt" id="cntProx">0</span></div>
+      <div class="sb-item" id="nav-todos" onclick="showPage('todos')"><span class="sb-ico">○</span> Todos los turnos</div>
+      <span class="sb-sec-lbl">Configuración</span>
+      <div class="sb-item" id="nav-servicios" onclick="showPage('servicios')"><span class="sb-ico">◇</span> Editar servicios</div>
+      <div class="sb-item" id="nav-textos" onclick="showPage('textos')"><span class="sb-ico">◇</span> Editar textos</div>
+      <div class="sb-item" id="nav-password" onclick="showPage('password')"><span class="sb-ico">◇</span> Contraseña</div>
+    </nav>
+    <div class="sb-foot">
+      <a class="sb-site" href="index.html" target="_blank">Ver sitio →</a>
+      <button class="sb-logout" onclick="doLogout()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page active" id="page-dashboard"><h1 class="page-ttl"><em>Dashboard</em></h1><p class="page-sub">Vista general</p><div class="divider"></div><div class="stats" id="dashStats"></div><p class="stl">Próximos <em>turnos</em></p><div class="appt-list" id="dashList"></div></div>
+    <div class="page" id="page-hoy"><h1 class="page-ttl">Turnos de <em>hoy</em></h1><p class="page-sub" id="todayLabel"></p><div class="divider"></div><div class="appt-list" id="hoyList"></div></div>
+    <div class="page" id="page-proximos"><h1 class="page-ttl">Próximos <em>turnos</em></h1><p class="page-sub">Desde hoy</p><div class="divider"></div><div class="appt-list" id="proxList"></div></div>
+    <div class="page" id="page-todos">
+      <h1 class="page-ttl">Todos los <em>turnos</em></h1><p class="page-sub">Historial completo</p><div class="divider"></div>
+      <div class="filter-bar"><button class="ftab active" onclick="setFilter('todos',this)">Todos</button><button class="ftab" onclick="setFilter('confirmado',this)">Confirmados</button><button class="ftab" onclick="setFilter('cancelado',this)">Cancelados</button><button class="ftab" onclick="setFilter('pendiente',this)">Pendientes</button><input class="f-date" type="date" id="fFrom"><input class="f-date" type="date" id="fTo"><button class="btn-f" onclick="applyFilter()">Filtrar</button><button class="btn-fc" onclick="clearFilter()">Limpiar</button></div>
+      <div class="appt-list" id="todosList"></div>
+    </div>
+    <div class="page" id="page-servicios"><h1 class="page-ttl">Editar <em>servicios</em></h1><p class="page-sub">Modificá nombre, precio y duración</p><div class="divider"></div><div class="srv-editor" id="srvEditor"></div><button class="btn-add-srv" onclick="addSrv()">+ Agregar servicio</button><div class="save-row"><button class="btn-save" onclick="saveSrvs()">Guardar cambios</button><span class="save-ok" id="srvOk">✓ Guardado correctamente</span></div></div>
+    <div class="page" id="page-textos">
+      <h1 class="page-ttl">Editar <em>textos</em></h1><p class="page-sub">Modificá los textos del sitio</p><div class="divider"></div>
+      <div class="txt-section"><div class="ts-title">Página principal</div><div class="form-grid col2"><div class="tfg"><label class="t-lbl">Subtítulo / Ocupación</label><input class="t-inp" id="tSubtitle"></div><div class="tfg"><label class="t-lbl">Descripción hero</label><input class="t-inp" id="tDesc"></div></div><div class="form-grid" style="margin-top:1.1rem"><div class="tfg"><label class="t-lbl">Texto del footer</label><input class="t-inp" id="tFooter"></div></div></div>
+      <div class="txt-section"><div class="ts-title">Información de contacto</div><div class="form-grid col2"><div class="tfg"><label class="t-lbl">Dirección</label><input class="t-inp" id="tAddr"></div><div class="tfg"><label class="t-lbl">Horarios</label><input class="t-inp" id="tHours"></div><div class="tfg"><label class="t-lbl">Instagram (sin @)</label><input class="t-inp" id="tIG"></div><div class="tfg"><label class="t-lbl">WhatsApp (solo números)</label><input class="t-inp" id="tWA"></div></div></div>
+      <div class="save-row"><button class="btn-save" onclick="saveTxts()">Guardar cambios</button><span class="save-ok" id="txtOk">✓ Guardado correctamente</span></div>
+    </div>
+    <div class="page" id="page-password"><h1 class="page-ttl">Cambiar <em>contraseña</em></h1><p class="page-sub">Solo el administrador puede modificarla</p><div class="divider"></div><div class="pw-wrap"><div class="pw-form"><div class="tfg"><label class="t-lbl">Contraseña actual</label><input class="t-inp" id="pwCur" type="password"></div><div class="tfg"><label class="t-lbl">Nueva contraseña</label><input class="t-inp" id="pwNew" type="password"></div><div class="tfg"><label class="t-lbl">Repetir nueva contraseña</label><input class="t-inp" id="pwRep" type="password"></div><div class="save-row" style="margin-top:.5rem"><button class="btn-save" onclick="changePw()">Cambiar contraseña</button><span class="save-ok" id="pwOk">✓ Actualizada</span></div><p id="pwErr" style="display:none;font-size:.72rem;color:var(--red);letter-spacing:.04em"></p></div></div></div>
+  </main>
+</div>
+
+<script>
+const DEF_SRV=[{id:1,name:'Corte',price:15000,duration:45},{id:2,name:'Coloración',price:35000,duration:120},{id:3,name:'Balayage',price:45000,duration:150},{id:4,name:'Mechas',price:40000,duration:120},{id:5,name:'Tinte',price:25000,duration:60},{id:6,name:'Tratamiento',price:12000,duration:30}];
+const DEF_TXT={heroSubtitle:'Peluquero Colorista · Villa del Parque',heroDesc:'Colorización artística. Cortes con identidad. Resultados únicos.',footerText:'© 2025 GC Hair Concept · Gonzalo Cortez',address:'Simbron 3212, Villa del Parque',hours:'Mar–Sab · 10 a 20hs',instagram:'gonzalocortez.hc',whatsapp:'5491100000000'};
+const DEF_PW='gc2025';
+const getSrv=()=>JSON.parse(localStorage.getItem('gc_services')||'null')||DEF_SRV;
+const getTxt=()=>Object.assign({},DEF_TXT,JSON.parse(localStorage.getItem('gc_texts')||'{}'));
+const getAppts=()=>JSON.parse(localStorage.getItem('gc_appointments')||'[]');
+const getPw=()=>localStorage.getItem('gc_password')||DEF_PW;
+const setSrv=d=>localStorage.setItem('gc_services',JSON.stringify(d));
+const setTxt=d=>localStorage.setItem('gc_texts',JSON.stringify(d));
+const setAppts=d=>localStorage.setItem('gc_appointments',JSON.stringify(d));
+const setPw=p=>localStorage.setItem('gc_password',p);
+function doLogin(){const v=document.getElementById('pwInput').value;if(v===getPw()){sessionStorage.setItem('gc_auth','1');document.getElementById('loginScr').style.display='none';document.getElementById('adminApp').classList.add('show');initAdmin();}else{const e=document.getElementById('loginErr');e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2500);}}
+function doLogout(){sessionStorage.removeItem('gc_auth');document.getElementById('adminApp').classList.remove('show');document.getElementById('loginScr').style.display='flex';document.getElementById('pwInput').value='';}
+function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function fmtDate(ds){return new Date(ds+'T12:00:00').toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'short',year:'numeric'});}
+function fmtDateLong(ds){return new Date(ds+'T12:00:00').toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});}
+function cleanWa(w){return w.replace(/\D/g,'');}
+function initAdmin(){updateCounts();showPage('dashboard');loadTxtsForm();}
+function updateCounts(){const A=getAppts(),today=todayStr();document.getElementById('cntHoy').textContent=A.filter(a=>a.date===today&&a.status!=='cancelado').length;document.getElementById('cntProx').textContent=A.filter(a=>a.date>today&&a.status!=='cancelado').length;}
+let curPage='dashboard',curFilter='todos',fFrom='',fTo='';
+function showPage(p){curPage=p;document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.sb-item').forEach(e=>e.classList.remove('active'));document.getElementById('page-'+p).classList.add('active');const ni=document.getElementById('nav-'+p);if(ni)ni.classList.add('active');if(p==='dashboard')renderDashboard();if(p==='hoy')renderHoy();if(p==='proximos')renderProx();if(p==='todos')renderTodos();if(p==='servicios')renderSrvEditor();if(p==='textos')loadTxtsForm();}
+function apptCard(a){const df=fmtDate(a.date);const waMsg=encodeURIComponent(`Hola ${a.name}! Te confirmamos tu turno:\n*Servicio:* ${a.sname}\n*Fecha:* ${fmtDateLong(a.date)}\n*Hora:* ${a.time} hs\n¡Nos vemos!`);return`<div class="appt-card"><div class="appt-top"><div><div class="appt-srv">${a.sname}</div><div class="appt-price">$${a.sprice.toLocaleString('es-AR')} ARS · ${a.sdur} min</div></div><span class="badge ${a.status}">${a.status}</span></div><div class="appt-info-row"><div class="ai"><span class="ai-lbl">Fecha</span><span class="ai-val">${df}</span></div><div class="ai"><span class="ai-lbl">Hora</span><span class="ai-val">${a.time} hs</span></div><div class="ai"><span class="ai-lbl">Cliente</span><span class="ai-val">${a.name}</span></div><div class="ai"><span class="ai-lbl">WhatsApp</span><span class="ai-val"><a href="https://wa.me/${cleanWa(a.wa)}" target="_blank">${a.wa}</a></span></div>${a.email?`<div class="ai"><span class="ai-lbl">Email</span><span class="ai-val">${a.email}</span></div>`:''}${a.notes?`<div class="ai"><span class="ai-lbl">Nota</span><span class="ai-val">${a.notes}</span></div>`:''}</div><div class="appt-actions">${a.status!=='confirmado'?`<button class="btn-a ok" onclick="updStatus('${a.id}','confirmado')">✓ Confirmar</button>`:''}${a.status!=='cancelado'?`<button class="btn-a no" onclick="updStatus('${a.id}','cancelado')">✕ Cancelar</button>`:''}<button class="btn-a no" onclick="delAppt('${a.id}')">Eliminar</button><a class="btn-a wa" href="https://wa.me/${cleanWa(a.wa)}?text=${waMsg}" target="_blank">WhatsApp</a></div></div>`;}
+function emptyS(msg='No hay turnos'){return`<div class="empty-s"><p>${msg}</p></div>`;}
+function updStatus(id,st){const A=getAppts();const i=A.findIndex(a=>a.id===id);if(i>=0){A[i].status=st;setAppts(A);}refresh();updateCounts();}
+function delAppt(id){if(!confirm('¿Eliminás este turno?'))return;setAppts(getAppts().filter(a=>a.id!==id));refresh();updateCounts();}
+function refresh(){if(curPage==='dashboard')renderDashboard();else if(curPage==='hoy')renderHoy();else if(curPage==='proximos')renderProx();else if(curPage==='todos')renderTodos();}
+function renderDashboard(){const A=getAppts(),today=todayStr();const tot=A.length,hoy=A.filter(a=>a.date===today&&a.status!=='cancelado').length,pend=A.filter(a=>a.status==='pendiente').length,conf=A.filter(a=>a.status==='confirmado').length;document.getElementById('dashStats').innerHTML=`<div class="stat"><div class="stat-val">${tot}</div><div class="stat-lbl">Total turnos</div></div><div class="stat"><div class="stat-val">${hoy}</div><div class="stat-lbl">Hoy</div></div><div class="stat"><div class="stat-val">${pend}</div><div class="stat-lbl">Pendientes</div></div><div class="stat"><div class="stat-val">${conf}</div><div class="stat-lbl">Confirmados</div></div>`;const up=A.filter(a=>a.date>=today&&a.status!=='cancelado').sort((a,b)=>a.date===b.date?a.time.localeCompare(b.time):a.date.localeCompare(b.date)).slice(0,6);document.getElementById('dashList').innerHTML=up.length?up.map(apptCard).join(''):emptyS('Sin próximos turnos');}
+function renderHoy(){const today=todayStr();document.getElementById('todayLabel').textContent=new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});const A=getAppts().filter(a=>a.date===today).sort((a,b)=>a.time.localeCompare(b.time));document.getElementById('hoyList').innerHTML=A.length?A.map(apptCard).join(''):emptyS('No hay turnos hoy');}
+function renderProx(){const today=todayStr();const A=getAppts().filter(a=>a.date>=today&&a.status!=='cancelado').sort((a,b)=>a.date===b.date?a.time.localeCompare(b.time):a.date.localeCompare(b.date));document.getElementById('proxList').innerHTML=A.length?A.map(apptCard).join(''):emptyS('Sin próximos turnos');}
+function setFilter(f,btn){curFilter=f;document.querySelectorAll('.ftab').forEach(e=>e.classList.remove('active'));btn.classList.add('active');renderTodos();}
+function applyFilter(){fFrom=document.getElementById('fFrom').value;fTo=document.getElementById('fTo').value;renderTodos();}
+function clearFilter(){fFrom='';fTo='';document.getElementById('fFrom').value='';document.getElementById('fTo').value='';renderTodos();}
+function renderTodos(){let A=getAppts().sort((a,b)=>b.date.localeCompare(a.date));if(curFilter!=='todos')A=A.filter(a=>a.status===curFilter);if(fFrom)A=A.filter(a=>a.date>=fFrom);if(fTo)A=A.filter(a=>a.date<=fTo);document.getElementById('todosList').innerHTML=A.length?A.map(apptCard).join(''):emptyS('Sin resultados');}
+let editSrvs=[];
+function renderSrvEditor(){editSrvs=getSrv().map(s=>({...s}));document.getElementById('srvEditor').innerHTML=editSrvs.map((s,i)=>`<div class="srv-row"><div class="srv-field"><span class="srv-field-lbl">Servicio</span><input class="srv-inp" type="text" value="${s.name}" onchange="editSrvs[${i}].name=this.value"></div><div class="srv-field"><span class="srv-field-lbl">Precio $</span><input class="srv-inp" type="number" value="${s.price}" onchange="editSrvs[${i}].price=+this.value" min="0" step="500"></div><div class="srv-field"><span class="srv-field-lbl">Duración (min)</span><input class="srv-inp" type="number" value="${s.duration}" onchange="editSrvs[${i}].duration=+this.value" min="15" step="15"></div><button class="btn-rm" onclick="rmSrv(${i})">×</button></div>`).join('');}
+function rmSrv(i){if(editSrvs.length<=1){alert('Debe haber al menos un servicio.');return;}editSrvs.splice(i,1);renderSrvEditor();}
+function addSrv(){editSrvs.push({id:Date.now(),name:'Nuevo servicio',price:10000,duration:45});renderSrvEditor();}
+function saveSrvs(){const rows=document.querySelectorAll('#srvEditor .srv-row');rows.forEach((row,i)=>{const inps=row.querySelectorAll('input');editSrvs[i].name=inps[0].value||editSrvs[i].name;editSrvs[i].price=+inps[1].value||editSrvs[i].price;editSrvs[i].duration=+inps[2].value||editSrvs[i].duration;});setSrv(editSrvs);flash('srvOk');}
+function loadTxtsForm(){const T=getTxt();document.getElementById('tSubtitle').value=T.heroSubtitle||'';document.getElementById('tDesc').value=T.heroDesc||'';document.getElementById('tFooter').value=T.footerText||'';document.getElementById('tAddr').value=T.address||'';document.getElementById('tHours').value=T.hours||'';document.getElementById('tIG').value=T.instagram||'';document.getElementById('tWA').value=T.whatsapp||'';}
+function saveTxts(){const T=getTxt();T.heroSubtitle=document.getElementById('tSubtitle').value;T.heroDesc=document.getElementById('tDesc').value;T.footerText=document.getElementById('tFooter').value;T.address=document.getElementById('tAddr').value;T.hours=document.getElementById('tHours').value;T.instagram=document.getElementById('tIG').value;T.whatsapp=document.getElementById('tWA').value;setTxt(T);flash('txtOk');}
+function changePw(){const cur=document.getElementById('pwCur').value,nw=document.getElementById('pwNew').value,rep=document.getElementById('pwRep').value;const err=document.getElementById('pwErr');err.style.display='none';if(cur!==getPw()){err.textContent='Contraseña actual incorrecta.';err.style.display='block';return;}if(nw.length<4){err.textContent='Mínimo 4 caracteres.';err.style.display='block';return;}if(nw!==rep){err.textContent='Las contraseñas no coinciden.';err.style.display='block';return;}setPw(nw);['pwCur','pwNew','pwRep'].forEach(id=>document.getElementById(id).value='');flash('pwOk');}
+function flash(id){const el=document.getElementById(id);el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);}
+if(sessionStorage.getItem('gc_auth')==='1'){document.getElementById('loginScr').style.display='none';document.getElementById('adminApp').classList.add('show');initAdmin();}
+document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+</script>
+</body>
+</html>
