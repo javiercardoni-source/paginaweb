@@ -250,14 +250,50 @@ const setTxt=d=>localStorage.setItem('gc_texts',JSON.stringify(d));
 const setAppts=d=>{_cache=d;localStorage.setItem('gc_appointments',JSON.stringify(d));};
 const setPw=p=>localStorage.setItem('gc_password',p);
 
+/* Normalizar fecha */
+function normalizeDate(d){
+  if(!d)return'';
+  if(typeof d==='string'){
+    if(d.includes('T'))return d.split('T')[0];
+    if(d.match(/^\d{4}-\d{2}-\d{2}$/))return d;
+    const parsed=new Date(d);
+    if(!isNaN(parsed))return parsed.toISOString().split('T')[0];
+  }
+  return'';
+}
+/* Normalizar hora */
+function normalizeTime(t){
+  if(!t)return'';
+  if(typeof t==='string'){
+    const match=t.match(/^(\d{1,2}):(\d{2})/);
+    if(match)return`${match[1].padStart(2,'0')}:${match[2]}`;
+  }
+  return'';
+}
+
 async function loadFromAPI(){
   const btn=document.getElementById('syncBtn');
   if(btn){btn.classList.add('loading');btn.textContent='↻ Cargando...';}
   try{
     const r=await fetch(API_URL+'?action=list&t='+Date.now(),{redirect:'follow'});
     const d=await r.json();
-    if(Array.isArray(d)&&d.length>=0){
-      _cache=d.map(a=>({...a,sprice:Number(a.sprice)||0,sdur:Number(a.sdur)||0}));
+    if(d.ok && Array.isArray(d.data)){
+      _cache=d.data.map(a=>({
+        ...a,
+        sprice:Number(a.sprice)||0,
+        sdur:Number(a.sdur)||0,
+        date:normalizeDate(a.date),
+        time:normalizeTime(a.time)
+      }));
+      localStorage.setItem('gc_appointments',JSON.stringify(_cache));
+    } else if(Array.isArray(d)&&d.length>=0){
+      _cache=d.map(a=>({
+        ...a,
+        sprice:Number(a.sprice)||0,
+        sdur:Number(a.sdur)||0,
+        date:normalizeDate(a.date),
+        time:normalizeTime(a.time)
+      }));
       localStorage.setItem('gc_appointments',JSON.stringify(_cache));
     }
   }catch(e){console.warn('Sin conexión API, usando datos locales:',e);}
@@ -273,8 +309,8 @@ async function syncNow(){
 function doLogin(){const v=document.getElementById('pwInput').value;if(v===getPw()){sessionStorage.setItem('gc_auth','1');document.getElementById('loginScr').style.display='none';document.getElementById('adminApp').classList.add('show');initAdmin();}else{const e=document.getElementById('loginErr');e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2500);}}
 function doLogout(){sessionStorage.removeItem('gc_auth');document.getElementById('adminApp').classList.remove('show');document.getElementById('loginScr').style.display='flex';document.getElementById('pwInput').value='';}
 function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
-function fmtDate(ds){return new Date(ds+'T12:00:00').toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'short',year:'numeric'});}
-function fmtDateLong(ds){return new Date(ds+'T12:00:00').toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});}
+function fmtDate(ds){if(!ds||ds==='')return'Fecha no especificada';try{const d=new Date(ds+'T12:00:00');if(isNaN(d))return ds;return d.toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'short',year:'numeric'});}catch(e){return ds;}}
+function fmtDateLong(ds){if(!ds||ds==='')return'Fecha no especificada';try{const d=new Date(ds+'T12:00:00');if(isNaN(d))return ds;return d.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});}catch(e){return ds;}}
 function cleanWa(w){return w.replace(/\D/g,'');}
 async function initAdmin(){await loadFromAPI();updateCounts();showPage('dashboard');loadTxtsForm();}
 function updateCounts(){const A=getAppts(),today=todayStr();document.getElementById('cntHoy').textContent=A.filter(a=>a.date===today&&a.status!=='cancelado').length;document.getElementById('cntProx').textContent=A.filter(a=>a.date>today&&a.status!=='cancelado').length;}

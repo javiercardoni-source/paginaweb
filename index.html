@@ -372,16 +372,65 @@ window.addEventListener('scroll',()=>{document.getElementById('nav').classList.t
 /* ── DATA ── */
 const DEF_SRV=[{id:1,name:'Corte',price:15000,duration:45},{id:2,name:'Coloración',price:35000,duration:120},{id:3,name:'Balayage',price:45000,duration:150},{id:4,name:'Mechas',price:40000,duration:120},{id:5,name:'Tinte',price:25000,duration:60},{id:6,name:'Tratamiento',price:12000,duration:30}];
 const DEF_TXT={heroSubtitle:'Peluquero Colorista · Villa del Parque',heroDesc:'Colorización artística. Cortes con identidad.',footerText:'© 2025 GC Hair Concept · Gonzalo Cortez',address:'Simbron 3212, Villa del Parque',hours:'Mar–Sab · 10 a 20hs',instagram:'gonzalocortez.hc',whatsapp:'5491100000000'};
+let APPTS_CACHE=[];
 const getSrv=()=>JSON.parse(localStorage.getItem('gc_services')||'null')||DEF_SRV;
 const getTxt=()=>Object.assign({},DEF_TXT,JSON.parse(localStorage.getItem('gc_texts')||'{}'));
-const getAppts=()=>JSON.parse(localStorage.getItem('gc_appointments')||'[]');
-const saveAppt=a=>{
-  const all=getAppts();all.push(a);localStorage.setItem('gc_appointments',JSON.stringify(all));
-  // Usamos no-cors para evitar problemas de CORS con Apps Script
-  fetch(API_URL+'?action=add&data='+encodeURIComponent(JSON.stringify(a)),{mode:'no-cors'}).catch(()=>{});
+const getAppts=()=>APPTS_CACHE;
+
+/* Cargar citas desde la API */
+async function loadApptsFromAPI(){
+  try{
+    const r=await fetch(API_URL+'?action=list');
+    const j=await r.json();
+    if(j.ok && Array.isArray(j.data)){
+      APPTS_CACHE=j.data.map(a=>({
+        ...a,
+        sprice:+a.sprice||0,
+        sdur:+a.sdur||0,
+        date:normalizeDate(a.date),
+        time:normalizeTime(a.time)
+      }));
+    }
+  }catch(e){console.error('Error cargando turnos',e);}
+}
+
+/* Normalizar fecha (puede venir como string ISO, Date, o YYYY-MM-DD) */
+function normalizeDate(d){
+  if(!d)return'';
+  if(typeof d==='string'){
+    if(d.includes('T'))return d.split('T')[0];
+    if(d.match(/^\d{4}-\d{2}-\d{2}$/))return d;
+    const parsed=new Date(d);
+    if(!isNaN(parsed))return parsed.toISOString().split('T')[0];
+  }
+  return'';
+}
+
+/* Normalizar hora (puede venir como HH:MM o con segundos) */
+function normalizeTime(t){
+  if(!t)return'';
+  if(typeof t==='string'){
+    const match=t.match(/^(\d{1,2}):(\d{2})/);
+    if(match)return`${match[1].padStart(2,'0')}:${match[2]}`;
+  }
+  return'';
+}
+
+const saveAppt=async(a)=>{
+  try{
+    const payload={action:'create',data:a};
+    await fetch(API_URL,{
+      method:'POST',
+      mode:'no-cors',
+      body:JSON.stringify(payload),
+      headers:{'Content-Type':'application/json'}
+    });
+    APPTS_CACHE.push(a);
+  }catch(e){console.error('Error guardando turno',e);}
 };
 
-function init(){
+async function init(){
+  await loadApptsFromAPI();
   const T=getTxt();
   document.getElementById('hero-tag').textContent=T.heroSubtitle;
   document.getElementById('hi-addr').textContent=T.address.split(',')[0];
@@ -410,10 +459,10 @@ const DAYS=['D','L','M','X','J','V','S'],MONTHS=['Enero','Febrero','Marzo','Abri
 function renderCal(){document.getElementById('calLabel').textContent=MONTHS[calM]+' '+calY;const fd=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate(),today=new Date();today.setHours(0,0,0,0);let h=DAYS.map(d=>`<div class="cal-dh">${d}</div>`).join('');for(let i=0;i<fd;i++)h+=`<div class="cal-d empty"></div>`;for(let d=1;d<=dim;d++){const dt=new Date(calY,calM,d),dow=dt.getDay();const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isPast=dt<today,isAvail=AVAIL.includes(dow)&&!isPast,isToday=dt.getTime()===today.getTime();let c='cal-d';if(isToday)c+=' today';if(isPast)c+=' past';else if(!AVAIL.includes(dow))c+=' unavail';else c+=' avail';if(bk.date===ds)c+=' sel';h+=`<div class="${c}" ${isAvail?`onclick="selDate('${ds}')"`:''}>${d}</div>`;}document.getElementById('calGrid').innerHTML=h;if(bk.date)renderSlots();}
 function prevMonth(){calM--;if(calM<0){calM=11;calY--;}renderCal();}
 function nextMonth(){calM++;if(calM>11){calM=0;calY++;}renderCal();}
-function selDate(ds){bk.date=ds;bk.time='';renderCal();document.getElementById('timeSec').style.display='block';renderSlots();updNext();setTimeout(()=>{const body=document.getElementById('mbody');body.scrollTo({top:body.scrollHeight,behavior:'smooth'});},150);}
+async function selDate(ds){bk.date=ds;bk.time='';renderCal();document.getElementById('timeSec').style.display='block';await loadApptsFromAPI();renderSlots();updNext();setTimeout(()=>{const body=document.getElementById('mbody');body.scrollTo({top:body.scrollHeight,behavior:'smooth'});},150);}
 function genSlots(dur){const s=[],start=10*60,end=20*60-dur;for(let t=start;t<=end;t+=30)s.push(`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`);return s;}
 function toMin(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
-function isBooked(ds,ts,dur){const as=getAppts().filter(a=>a.status!=='cancelado'&&a.date===ds),ss=toMin(ts),se=ss+dur;return as.some(a=>{const as2=toMin(a.time),ae=as2+a.sdur;return ss<ae&&se>as2;});}
+function isBooked(ds,ts,dur){const as=getAppts().filter(a=>a.status!=='cancelado'&&a.date===ds&&a.time),ss=toMin(ts),se=ss+dur;return as.some(a=>{if(!a.time)return false;const as2=toMin(a.time),ae=as2+(a.sdur||60);return ss<ae&&se>as2;});}
 function renderSlots(){document.getElementById('slotsGrid').innerHTML=genSlots(bk.sdur).map(t=>{const bkd=isBooked(bk.date,t,bk.sdur),sel=bk.time===t;return`<div class="slot ${bkd?'bkd':''} ${sel?'sel':''}" ${!bkd?`onclick="selTime('${t}')"`:''}>${t}</div>`;}).join('');}
 function selTime(t){bk.time=t;renderSlots();updNext();}
 function renderCsum(){const dObj=new Date(bk.date+'T12:00:00'),df=dObj.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});const rows=[{k:'Servicio',v:bk.sname},{k:'Precio',v:'$'+bk.sprice.toLocaleString('es-AR')+' ARS'},{k:'Fecha',v:df.charAt(0).toUpperCase()+df.slice(1)},{k:'Horario',v:bk.time+' hs'},{k:'Nombre',v:bk.name},{k:'WhatsApp',v:bk.wa}];if(bk.email)rows.push({k:'Email',v:bk.email});if(bk.notes)rows.push({k:'Aclaraciones',v:bk.notes});document.getElementById('csum').innerHTML=rows.map(r=>`<div class="cr"><span class="ck">${r.k}</span><span class="cv">${r.v}</span></div>`).join('');}
