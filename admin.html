@@ -235,7 +235,7 @@ const AC=document.getElementById('adCur'),AC2=document.getElementById('adCur2');
 document.addEventListener('mousemove',e=>{AC.style.left=e.clientX+'px';AC.style.top=e.clientY+'px';setTimeout(()=>{AC2.style.left=e.clientX+'px';AC2.style.top=e.clientY+'px';},80);});
 
 /* ── API ── */
-const API_URL='https://script.google.com/macros/s/AKfycbwLtv6-Ev1IKRPgvr8yfEhE4cRubGWpGp1nHAFwyUf78XYF_pxuJLCi55wFj-e0y80Bfg/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbyj000rBpaz_FgUa2A9799NqxwrWEmh2F2gir_9tO2BMK1m0dAsphg9Nga30w6CilU0Fw/exec';
 let _cache=JSON.parse(localStorage.getItem('gc_appointments')||'[]');
 
 const DEF_SRV=[{id:1,name:'Corte',price:15000,duration:45},{id:2,name:'Coloración',price:35000,duration:120},{id:3,name:'Balayage',price:45000,duration:150},{id:4,name:'Mechas',price:40000,duration:120},{id:5,name:'Tinte',price:25000,duration:60},{id:6,name:'Tratamiento',price:12000,duration:30}];
