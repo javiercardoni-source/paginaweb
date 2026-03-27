@@ -252,16 +252,16 @@ const setPw=p=>localStorage.setItem('gc_password',p);
 
 async function loadFromAPI(){
   const btn=document.getElementById('syncBtn');
-  if(btn)btn.classList.add('loading');
+  if(btn){btn.classList.add('loading');btn.textContent='↻ Cargando...';}
   try{
-    const r=await fetch(API_URL+'?t='+Date.now());
+    const r=await fetch(API_URL+'?t='+Date.now(),{redirect:'follow'});
     const d=await r.json();
-    if(Array.isArray(d)){
+    if(Array.isArray(d)&&d.length>=0){
       _cache=d.map(a=>({...a,sprice:Number(a.sprice)||0,sdur:Number(a.sdur)||0}));
       localStorage.setItem('gc_appointments',JSON.stringify(_cache));
     }
-  }catch(e){console.warn('Sin conexión API, usando datos locales');}
-  if(btn)btn.classList.remove('loading');
+  }catch(e){console.warn('Sin conexión API, usando datos locales:',e);}
+  if(btn){btn.classList.remove('loading');btn.textContent='↻ Sincronizar';}
 }
 
 async function syncNow(){
@@ -282,8 +282,8 @@ let curPage='dashboard',curFilter='todos',fFrom='',fTo='';
 function showPage(p){curPage=p;document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.sb-item').forEach(e=>e.classList.remove('active'));document.getElementById('page-'+p).classList.add('active');const ni=document.getElementById('nav-'+p);if(ni)ni.classList.add('active');if(p==='dashboard')renderDashboard();if(p==='hoy')renderHoy();if(p==='proximos')renderProx();if(p==='todos')renderTodos();if(p==='servicios')renderSrvEditor();if(p==='textos')loadTxtsForm();}
 function apptCard(a){const df=fmtDate(a.date);const wm=encodeURIComponent(`Hola ${a.name}! Te confirmamos tu turno:\n*Servicio:* ${a.sname}\n*Fecha:* ${fmtDateLong(a.date)}\n*Hora:* ${a.time} hs\n¡Nos vemos!`);return`<div class="appt-card"><div class="appt-top"><div><div class="appt-srv">${a.sname}</div><div class="appt-price">$${Number(a.sprice).toLocaleString('es-AR')} ARS · ${a.sdur} min</div></div><span class="badge ${a.status}">${a.status}</span></div><div class="appt-info-row"><div class="ai"><span class="ai-lbl">Fecha</span><span class="ai-val">${df}</span></div><div class="ai"><span class="ai-lbl">Hora</span><span class="ai-val">${a.time} hs</span></div><div class="ai"><span class="ai-lbl">Cliente</span><span class="ai-val">${a.name}</span></div><div class="ai"><span class="ai-lbl">WhatsApp</span><span class="ai-val"><a href="https://wa.me/${cleanWa(a.wa)}" target="_blank">${a.wa}</a></span></div>${a.email?`<div class="ai"><span class="ai-lbl">Email</span><span class="ai-val">${a.email}</span></div>`:''}${a.notes?`<div class="ai"><span class="ai-lbl">Nota</span><span class="ai-val">${a.notes}</span></div>`:''}</div><div class="appt-actions">${a.status!=='confirmado'?`<button class="btn-a ok" onclick="updStatus('${a.id}','confirmado')">✓ Confirmar</button>`:''}${a.status!=='cancelado'?`<button class="btn-a no" onclick="updStatus('${a.id}','cancelado')">✕ Cancelar</button>`:''}<button class="btn-a no" onclick="delAppt('${a.id}')">Eliminar</button><a class="btn-a wa" href="https://wa.me/${cleanWa(a.wa)}?text=${wm}" target="_blank">WhatsApp</a></div></div>`;}
 function emptyS(m='No hay turnos'){return`<div class="empty-s"><p>${m}</p></div>`;}
-function updStatus(id,st){const A=getAppts();const i=A.findIndex(a=>a.id==id);if(i>=0){A[i].status=st;setAppts(A);}fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'update',id,status:st})}).catch(()=>{});refresh();updateCounts();}
-function delAppt(id){if(!confirm('¿Eliminás este turno?'))return;setAppts(getAppts().filter(a=>a.id!=id));fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'delete',id})}).catch(()=>{});refresh();updateCounts();}
+function updStatus(id,st){const A=getAppts();const i=A.findIndex(a=>a.id==id);if(i>=0){A[i].status=st;setAppts(A);}fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'update',id,status:st})}).catch(()=>{});refresh();updateCounts();}
+function delAppt(id){if(!confirm('¿Eliminás este turno?'))return;setAppts(getAppts().filter(a=>a.id!=id));fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'delete',id})}).catch(()=>{});refresh();updateCounts();}
 function refresh(){if(curPage==='dashboard')renderDashboard();else if(curPage==='hoy')renderHoy();else if(curPage==='proximos')renderProx();else if(curPage==='todos')renderTodos();}
 function renderDashboard(){const A=getAppts(),today=todayStr();const tot=A.length,hoy=A.filter(a=>a.date===today&&a.status!=='cancelado').length,pend=A.filter(a=>a.status==='pendiente').length,conf=A.filter(a=>a.status==='confirmado').length;document.getElementById('dashStats').innerHTML=`<div class="stat"><div class="stat-val">${tot}</div><div class="stat-lbl">Total turnos</div></div><div class="stat"><div class="stat-val">${hoy}</div><div class="stat-lbl">Hoy</div></div><div class="stat"><div class="stat-val">${pend}</div><div class="stat-lbl">Pendientes</div></div><div class="stat"><div class="stat-val">${conf}</div><div class="stat-lbl">Confirmados</div></div>`;const up=A.filter(a=>a.date>=today&&a.status!=='cancelado').sort((a,b)=>a.date===b.date?a.time.localeCompare(b.time):a.date.localeCompare(b.date)).slice(0,6);document.getElementById('dashList').innerHTML=up.length?up.map(apptCard).join(''):emptyS('Sin próximos turnos');}
 function renderHoy(){const today=todayStr();document.getElementById('todayLabel').textContent=new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});const A=getAppts().filter(a=>a.date===today).sort((a,b)=>a.time.localeCompare(b.time));document.getElementById('hoyList').innerHTML=A.length?A.map(apptCard).join(''):emptyS('No hay turnos hoy');}
