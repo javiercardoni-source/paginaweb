@@ -418,13 +418,9 @@ function normalizeTime(t){
 
 const saveAppt=async(a)=>{
   try{
-    const payload={action:'create',data:a};
-    await fetch(API_URL,{
-      method:'POST',
-      mode:'no-cors',
-      body:JSON.stringify(payload),
-      headers:{'Content-Type':'application/json'}
-    });
+    // Usar GET con query params para compatibilidad con Apps Script
+    const url=API_URL+'?action=create&data='+encodeURIComponent(JSON.stringify(a));
+    await fetch(url,{mode:'no-cors'});
     APPTS_CACHE.push(a);
   }catch(e){console.error('Error guardando turno',e);}
 };
