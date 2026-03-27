@@ -236,14 +236,14 @@ document.addEventListener('mousemove',e=>{AC.style.left=e.clientX+'px';AC.style.
 
 /* ── API ── */
 const API_URL='https://script.google.com/macros/s/AKfycbwLtv6-Ev1IKRPgvr8yfEhE4cRubGWpGp1nHAFwyUf78XYF_pxuJLCi55wFj-e0y80Bfg/exec';
-let _cache=null;
+let _cache=JSON.parse(localStorage.getItem('gc_appointments')||'[]');
 
 const DEF_SRV=[{id:1,name:'Corte',price:15000,duration:45},{id:2,name:'Coloración',price:35000,duration:120},{id:3,name:'Balayage',price:45000,duration:150},{id:4,name:'Mechas',price:40000,duration:120},{id:5,name:'Tinte',price:25000,duration:60},{id:6,name:'Tratamiento',price:12000,duration:30}];
 const DEF_TXT={heroSubtitle:'Peluquero Colorista · Villa del Parque',heroDesc:'Colorización artística. Cortes con identidad. Resultados únicos.',footerText:'© 2025 GC Hair Concept · Gonzalo Cortez',address:'Simbron 3212, Villa del Parque',hours:'Mar–Sab · 10 a 20hs',instagram:'gonzalocortez.hc',whatsapp:'5491100000000'};
 const DEF_PW='gc2025';
 const getSrv=()=>JSON.parse(localStorage.getItem('gc_services')||'null')||DEF_SRV;
 const getTxt=()=>Object.assign({},DEF_TXT,JSON.parse(localStorage.getItem('gc_texts')||'{}'));
-const getAppts=()=>_cache!==null?_cache:JSON.parse(localStorage.getItem('gc_appointments')||'[]');
+const getAppts=()=>_cache;
 const getPw=()=>localStorage.getItem('gc_password')||DEF_PW;
 const setSrv=d=>localStorage.setItem('gc_services',JSON.stringify(d));
 const setTxt=d=>localStorage.setItem('gc_texts',JSON.stringify(d));
@@ -312,7 +312,20 @@ function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getM
 function fmtDate(ds){if(!ds||ds==='')return'Fecha no especificada';try{const d=new Date(ds+'T12:00:00');if(isNaN(d))return ds;return d.toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'short',year:'numeric'});}catch(e){return ds;}}
 function fmtDateLong(ds){if(!ds||ds==='')return'Fecha no especificada';try{const d=new Date(ds+'T12:00:00');if(isNaN(d))return ds;return d.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});}catch(e){return ds;}}
 function cleanWa(w){return w.replace(/\D/g,'');}
-async function initAdmin(){await loadFromAPI();updateCounts();showPage('dashboard');loadTxtsForm();}
+async function initAdmin(){
+  // Mostrar dashboard inmediatamente con datos locales
+  updateCounts();
+  showPage('dashboard');
+  loadTxtsForm();
+  // Cargar de API en segundo plano
+  loadFromAPI().then(()=>{refresh();updateCounts();});
+  // Auto-sync cada 30 segundos
+  setInterval(async()=>{
+    await loadFromAPI();
+    refresh();
+    updateCounts();
+  },30000);
+}
 function updateCounts(){const A=getAppts(),today=todayStr();document.getElementById('cntHoy').textContent=A.filter(a=>a.date===today&&a.status!=='cancelado').length;document.getElementById('cntProx').textContent=A.filter(a=>a.date>today&&a.status!=='cancelado').length;}
 let curPage='dashboard',curFilter='todos',fFrom='',fTo='';
 function showPage(p){curPage=p;document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.sb-item').forEach(e=>e.classList.remove('active'));document.getElementById('page-'+p).classList.add('active');const ni=document.getElementById('nav-'+p);if(ni)ni.classList.add('active');if(p==='dashboard')renderDashboard();if(p==='hoy')renderHoy();if(p==='proximos')renderProx();if(p==='todos')renderTodos();if(p==='servicios')renderSrvEditor();if(p==='textos')loadTxtsForm();}
