@@ -18,29 +18,11 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
 a{text-decoration:none;color:inherit}
 button{font-family:'Outfit',sans-serif;cursor:none}
-
-/* ─── CURSOR ─── */
-#cur{
-  position:fixed;pointer-events:none;z-index:9999;
-  width:8px;height:8px;
-  background:#fff;border-radius:50%;
-  transform:translate(-50%,-50%);
-  transition:width .18s,height .18s,opacity .18s;
-}
-#cur2{
-  position:fixed;width:32px;height:32px;
-  border:1px solid rgba(255,255,255,.28);
-  border-radius:50%;pointer-events:none;z-index:9998;
-  transform:translate(-50%,-50%);
-  transition:all .13s ease;
-}
+#cur{position:fixed;pointer-events:none;z-index:9999;width:8px;height:8px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);transition:width .18s,height .18s,opacity .18s;}
+#cur2{position:fixed;width:32px;height:32px;border:1px solid rgba(255,255,255,.28);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .13s ease;}
 body.hovering #cur{width:14px;height:14px}
 body.hovering #cur2{width:48px;height:48px;border-color:rgba(255,255,255,.55)}
-
-/* ─── NOISE ─── */
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:998;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px}
-
-/* ─── NAV ─── */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 4rem;height:64px;transition:background .3s,border-color .3s}
 nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--brd)}
 .nav-logo{display:flex;align-items:center;gap:1rem}
@@ -58,20 +40,12 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 .btn-reservar:hover{border-color:#fff}
 .btn-reservar:hover::before{transform:scaleX(1)}
 .btn-reservar:hover span{color:#050505}
-
-/* ─── HERO ─── */
 .hero{min-height:100svh;position:relative;display:flex;align-items:flex-end;overflow:hidden}
-
-/* ─── BACKGROUND CANVAS (partículas) ─── */
 #bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
-/* ─── HAIR STRANDS CANVAS ─── */
 #hairCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:.35}
-
 .hero-rules{position:absolute;inset:0;pointer-events:none;z-index:2}
 .hr-line{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.04) 30%,rgba(255,255,255,.04) 70%,transparent)}
 .hr-line:nth-child(1){left:33.33%}.hr-line:nth-child(2){left:66.66%}
-
-/* ─── HERO CONTENT ─── */
 .hero-content{position:relative;z-index:3;padding:0 4rem 5rem;width:100%}
 .hero-tag{display:inline-flex;align-items:center;gap:.7rem;margin-bottom:2rem;opacity:0;animation:riseIn .8s .1s forwards}
 .tag-dash{width:28px;height:1px;background:#fff}
@@ -98,8 +72,6 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 .sh-line{width:1px;height:44px;background:linear-gradient(to bottom,#fff,transparent);animation:shLine 2s ease-in-out infinite}
 @keyframes shLine{0%{transform:scaleY(0);transform-origin:top;opacity:1}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 .sh-text{font-size:.5rem;letter-spacing:.28em;text-transform:uppercase;color:var(--mut)}
-
-/* ─── MARQUEE ─── */
 .mqw{border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);overflow:hidden;white-space:nowrap;padding:.6rem 0;background:var(--bg2);position:relative}
 .mqw::before,.mqw::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
 .mqw::before{left:0;background:linear-gradient(to right,var(--bg2),transparent)}
@@ -107,8 +79,6 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 .mq-track{display:inline-block;animation:mq 30s linear infinite}
 .mq-track span{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.18);padding:0 1.8rem}
 .mq-track span.sep{color:rgba(255,255,255,.35);font-size:.35rem;padding:0 .2rem;vertical-align:middle}
-
-/* ─── PHILOSOPHY ─── */
 .philosophy{padding:8rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
 .ph-eyebrow{display:flex;align-items:center;gap:.7rem;margin-bottom:1.5rem}
 .ph-dash{width:24px;height:1px;background:#fff;opacity:.4}
@@ -123,8 +93,6 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 .ps-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:700;color:#fff;line-height:1;margin-bottom:.35rem}
 .ps-lbl{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
 .ps-desc{font-size:.82rem;color:var(--txt2);margin-top:.5rem;line-height:1.6}
-
-/* ─── SERVICES ─── */
 .services{padding:0 4rem 8rem;background:var(--bg)}
 .srv-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3rem;padding-bottom:1.5rem;border-bottom:1px solid var(--brd)}
 .srv-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300}
@@ -145,8 +113,6 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 .srv-card:hover .sc-btn{border-color:rgba(255,255,255,.55);color:#fff;transform:rotate(45deg)}
 .srv-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:#fff;transform:scaleX(0);transition:transform .4s ease}
 .srv-card:hover::before{transform:scaleX(1)}
-
-/* ─── STRIP ─── */
 .info-strip{border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);display:grid;grid-template-columns:repeat(4,1fr)}
 .is-item{padding:2.75rem 2.5rem;border-right:1px solid var(--brd);display:flex;flex-direction:column;gap:.5rem;transition:background .2s}
 .is-item:last-child{border-right:none}
@@ -154,9 +120,6 @@ nav.scrolled{background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom
 .is-lbl{font-size:.54rem;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,255,255,.35)}
 .is-val{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:300;color:var(--txt2);line-height:1.4}
 .is-val a:hover{color:var(--txt);transition:color .2s}
-.is-val a[href*="openModal"]{color:#fff}
-
-/* ─── FOOTER ─── */
 footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--brd)}
 .foot-logo{display:flex;align-items:center;gap:.85rem}
 .fm{width:30px;height:30px;border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:.82rem;font-weight:600}
@@ -165,8 +128,6 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 .foot-copy{font-size:.6rem;letter-spacing:.1em;color:var(--mut)}
 .foot-ig{font-size:.62rem;letter-spacing:.14em;color:rgba(255,255,255,.55);transition:opacity .2s}
 .foot-ig:hover{opacity:.7}
-
-/* ─── MODAL ─── */
 .moverlay{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center}
 .moverlay.open{display:flex}
 .mback{position:absolute;inset:0;background:rgba(3,3,3,.94);backdrop-filter:blur(20px)}
@@ -244,11 +205,9 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 .m-next:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,255,255,.12)}
 .m-next:hover::before{opacity:.06}
 .m-next:disabled{opacity:.2;cursor:not-allowed}
-
 @keyframes riseIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes mIn{from{opacity:0;transform:translateY(14px) scale(.99)}to{opacity:1;transform:none}}
-
 @media(max-width:768px){
   nav{padding:0 1.5rem}.nav-center{display:none}
   .hero-content{padding:0 1.5rem 4rem}.hero-info{display:none}
@@ -262,11 +221,8 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 </style>
 </head>
 <body>
-
 <div id="cur"></div>
 <div id="cur2"></div>
-
-<!-- NAV -->
 <nav id="nav">
   <a class="nav-logo" href="#">
     <div class="nav-mark">GC</div>
@@ -279,13 +235,10 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
   </div>
   <button class="btn-reservar" onclick="openModal()"><span>Reservar turno</span></button>
 </nav>
-
-<!-- HERO -->
 <section class="hero">
   <canvas id="bgCanvas"></canvas>
   <canvas id="hairCanvas"></canvas>
   <div class="hero-rules"><div class="hr-line"></div><div class="hr-line"></div></div>
-
   <div class="hero-content">
     <div class="hero-tag"><div class="tag-dash"></div><span class="tag-txt" id="hero-tag">Peluquero Colorista · Villa del Parque</span></div>
     <h1 class="hero-h1">
@@ -310,16 +263,12 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
   </div>
   <div class="hero-scroll-hint"><div class="sh-line"></div><span class="sh-text">Scroll</span></div>
 </section>
-
-<!-- MARQUEE -->
 <div class="mqw">
   <div class="mq-track">
     <span>GC Hair Concept</span><span class="sep">◆</span><span>Colorización Artística</span><span class="sep">◆</span><span>Villa del Parque</span><span class="sep">◆</span><span>Cortes con Identidad</span><span class="sep">◆</span><span>Desde 2016</span><span class="sep">◆</span><span>Rubio · Colorado · Fantasía</span><span class="sep">◆</span><span>Reservá tu turno</span><span class="sep">◆</span>
     <span>GC Hair Concept</span><span class="sep">◆</span><span>Colorización Artística</span><span class="sep">◆</span><span>Villa del Parque</span><span class="sep">◆</span><span>Cortes con Identidad</span><span class="sep">◆</span><span>Desde 2016</span><span class="sep">◆</span><span>Rubio · Colorado · Fantasía</span><span class="sep">◆</span><span>Reservá tu turno</span><span class="sep">◆</span>
   </div>
 </div>
-
-<!-- PHILOSOPHY -->
 <section class="philosophy">
   <div class="ph-left">
     <div class="ph-eyebrow"><div class="ph-dash"></div><span class="ph-pre">Nuestra filosofía</span></div>
@@ -332,8 +281,6 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
     <div class="ph-stat"><div class="ps-num">100%</div><div class="ps-lbl">Personalizado</div><div class="ps-desc">Sin fórmulas genéricas. Tu cabello, tu identidad</div></div>
   </div>
 </section>
-
-<!-- SERVICES -->
 <section class="services" id="servicios">
   <div class="srv-header">
     <h2 class="srv-title">Nuestros <em>servicios</em></h2>
@@ -341,16 +288,12 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
   </div>
   <div class="srv-grid" id="srv-grid"></div>
 </section>
-
-<!-- INFO STRIP -->
 <div class="info-strip" id="info">
   <div class="is-item"><span class="is-lbl">Dirección</span><span class="is-val" id="is-addr">Simbron 3212, Villa del Parque</span></div>
   <div class="is-item"><span class="is-lbl">Horarios</span><span class="is-val" id="is-hrs">Mar–Sab · 10 a 20hs</span></div>
   <div class="is-item"><span class="is-lbl">Instagram</span><span class="is-val"><a id="is-ig" href="https://instagram.com/gonzalocortez.hc" target="_blank">@gonzalocortez.hc</a></span></div>
   <div class="is-item"><span class="is-lbl">Reservas</span><span class="is-val"><a href="#" onclick="openModal();return false" style="color:#fff">Agendá tu turno →</a></span></div>
 </div>
-
-<!-- FOOTER -->
 <footer>
   <div class="foot-logo"><div class="fm">GC</div><span class="fn">Hair Concept</span></div>
   <div class="foot-right">
@@ -358,8 +301,6 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
     <a class="foot-ig" id="foot-ig" href="https://instagram.com/gonzalocortez.hc" target="_blank">@gonzalocortez.hc</a>
   </div>
 </footer>
-
-<!-- MODAL -->
 <div class="moverlay" id="moverlay">
   <div class="mback" onclick="closeModal()"></div>
   <div class="modal">
@@ -410,167 +351,20 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 </div>
 
 <script>
+/* ── API ── */
+const API_URL='https://script.google.com/macros/s/AKfycbzCGCJPINq8_dBRQEUP-fPvlulHwxHkpnPaydFVbQQZPaY3d56FOzVjKdNChnwMRFwd/exec';
+
 /* ── CURSOR ── */
 const CUR=document.getElementById('cur'),CUR2=document.getElementById('cur2');
-document.addEventListener('mousemove',e=>{
-  CUR.style.left=e.clientX+'px';CUR.style.top=e.clientY+'px';
-  setTimeout(()=>{CUR2.style.left=e.clientX+'px';CUR2.style.top=e.clientY+'px';},80);
-});
+document.addEventListener('mousemove',e=>{CUR.style.left=e.clientX+'px';CUR.style.top=e.clientY+'px';setTimeout(()=>{CUR2.style.left=e.clientX+'px';CUR2.style.top=e.clientY+'px';},80);});
 const interactives='button,a,.s-opt,.srv-card,.slot,.cal-d.avail,.is-item,.ph-stat';
-document.addEventListener('mouseover',e=>{
-  if(e.target.closest(interactives))document.body.classList.add('hovering');
-  else document.body.classList.remove('hovering');
-});
+document.addEventListener('mouseover',e=>{if(e.target.closest(interactives))document.body.classList.add('hovering');else document.body.classList.remove('hovering');});
 
 /* ── BACKGROUND PARTICLE NETWORK ── */
-(function(){
-  const canvas=document.getElementById('bgCanvas');
-  const ctx=canvas.getContext('2d');
-  let W,H,particles=[];
-  const COUNT=55,CONNECT_DIST=160,MOUSE={x:-9999,y:-9999};
+(function(){const canvas=document.getElementById('bgCanvas');const ctx=canvas.getContext('2d');let W,H,particles=[];const COUNT=55,CONNECT_DIST=160,MOUSE={x:-9999,y:-9999};document.addEventListener('mousemove',e=>{MOUSE.x=e.clientX;MOUSE.y=e.clientY;});function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}function Particle(){this.reset=function(fresh){this.x=Math.random()*W;this.y=fresh?Math.random()*H:Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*1.4+.4;this.base_alpha=Math.random()*.35+.1;this.alpha=this.base_alpha;this.pulse=Math.random()*Math.PI*2;};this.reset(true);}for(let i=0;i<COUNT;i++){const p=new Particle();particles.push(p);}let t=0;function draw(){ctx.clearRect(0,0,W,H);t+=.008;const grad=ctx.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,Math.max(W,H)*.7);grad.addColorStop(0,'rgba(255,255,255,0)');grad.addColorStop(1,'rgba(0,0,0,.55)');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);particles.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;p.pulse+=.025;p.alpha=p.base_alpha*(0.7+Math.sin(p.pulse)*0.3);const dx=p.x-MOUSE.x,dy=p.y-MOUSE.y;const dist=Math.sqrt(dx*dx+dy*dy);if(dist<100){const force=(100-dist)/100*0.5;p.vx+=dx/dist*force*0.04;p.vy+=dy/dist*force*0.04;}const speed=Math.sqrt(p.vx*p.vx+p.vy*p.vy);if(speed>0.8){p.vx=p.vx/speed*0.8;p.vy=p.vy/speed*0.8;}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${p.alpha})`;ctx.fill();});for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){const a=particles[i],b=particles[j];const dx=a.x-b.x,dy=a.y-b.y;const dist=Math.sqrt(dx*dx+dy*dy);if(dist<CONNECT_DIST){const opacity=(1-dist/CONNECT_DIST)*0.12;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(255,255,255,${opacity})`;ctx.lineWidth=.5;ctx.stroke();}}}const orbs=[{cx:W*.72+Math.sin(t*.4)*W*.08,cy:H*.35+Math.cos(t*.3)*H*.1,r:W*.35,a:.028},{cx:W*.25+Math.sin(t*.35+1)*W*.06,cy:H*.65+Math.cos(t*.28+2)*H*.08,r:W*.28,a:.022}];orbs.forEach(o=>{const g=ctx.createRadialGradient(o.cx,o.cy,0,o.cx,o.cy,o.r);g.addColorStop(0,`rgba(255,255,255,${o.a})`);g.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);});requestAnimationFrame(draw);}resize();window.addEventListener('resize',resize);draw();})();
 
-  document.addEventListener('mousemove',e=>{MOUSE.x=e.clientX;MOUSE.y=e.clientY;});
-
-  function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
-
-  function Particle(){
-    this.reset=function(fresh){
-      this.x=Math.random()*W;
-      this.y=fresh?Math.random()*H:Math.random()*H;
-      this.vx=(Math.random()-.5)*.3;
-      this.vy=(Math.random()-.5)*.3;
-      this.r=Math.random()*1.4+.4;
-      this.base_alpha=Math.random()*.35+.1;
-      this.alpha=this.base_alpha;
-      this.pulse=Math.random()*Math.PI*2;
-    };
-    this.reset(true);
-  }
-
-  for(let i=0;i<COUNT;i++){const p=new Particle();particles.push(p);}
-
-  let t=0;
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    t+=.008;
-
-    // Subtle vignette
-    const grad=ctx.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,Math.max(W,H)*.7);
-    grad.addColorStop(0,'rgba(255,255,255,0)');
-    grad.addColorStop(1,'rgba(0,0,0,.55)');
-    ctx.fillStyle=grad;
-    ctx.fillRect(0,0,W,H);
-
-    // Update & draw particles
-    particles.forEach((p,i)=>{
-      p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0||p.x>W)p.vx*=-1;
-      if(p.y<0||p.y>H)p.vy*=-1;
-      p.pulse+=.025;
-      p.alpha=p.base_alpha*(0.7+Math.sin(p.pulse)*0.3);
-
-      // Mouse repulsion (subtle)
-      const dx=p.x-MOUSE.x,dy=p.y-MOUSE.y;
-      const dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<100){
-        const force=(100-dist)/100*0.5;
-        p.vx+=dx/dist*force*0.04;
-        p.vy+=dy/dist*force*0.04;
-      }
-      // Speed cap
-      const speed=Math.sqrt(p.vx*p.vx+p.vy*p.vy);
-      if(speed>0.8){p.vx=p.vx/speed*0.8;p.vy=p.vy/speed*0.8;}
-
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,255,255,${p.alpha})`;
-      ctx.fill();
-    });
-
-    // Draw connections
-    for(let i=0;i<particles.length;i++){
-      for(let j=i+1;j<particles.length;j++){
-        const a=particles[i],b=particles[j];
-        const dx=a.x-b.x,dy=a.y-b.y;
-        const dist=Math.sqrt(dx*dx+dy*dy);
-        if(dist<CONNECT_DIST){
-          const opacity=(1-dist/CONNECT_DIST)*0.12;
-          ctx.beginPath();
-          ctx.moveTo(a.x,a.y);
-          ctx.lineTo(b.x,b.y);
-          ctx.strokeStyle=`rgba(255,255,255,${opacity})`;
-          ctx.lineWidth=.5;
-          ctx.stroke();
-        }
-      }
-    }
-
-    // Slow drifting spotlight orbs
-    const orbs=[
-      {cx:W*.72+Math.sin(t*.4)*W*.08,cy:H*.35+Math.cos(t*.3)*H*.1,r:W*.35,a:.028},
-      {cx:W*.25+Math.sin(t*.35+1)*W*.06,cy:H*.65+Math.cos(t*.28+2)*H*.08,r:W*.28,a:.022},
-    ];
-    orbs.forEach(o=>{
-      const g=ctx.createRadialGradient(o.cx,o.cy,0,o.cx,o.cy,o.r);
-      g.addColorStop(0,`rgba(255,255,255,${o.a})`);
-      g.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.fillStyle=g;
-      ctx.fillRect(0,0,W,H);
-    });
-
-    requestAnimationFrame(draw);
-  }
-
-  resize();
-  window.addEventListener('resize',resize);
-  draw();
-})();
-
-/* ── HAIR STRANDS (B&W) ── */
-(function(){
-  const canvas=document.getElementById('hairCanvas');
-  const ctx=canvas.getContext('2d');
-  let W,H,strands=[];
-  function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
-
-  function Strand(){
-    this.reset=function(){
-      this.x=W*(.35+Math.random()*.7);
-      this.y=-30;
-      this.len=H*.45+Math.random()*H*.45;
-      this.speed=.16+Math.random()*.2;
-      this.amp=14+Math.random()*34;
-      this.freq=.004+Math.random()*.006;
-      this.phase=Math.random()*Math.PI*2;
-      this.alpha=.025+Math.random()*.045;
-      this.width=.5+Math.random()*1.1;
-      this.life=0;this.maxLife=this.len/this.speed;
-    };
-    this.reset();this.life=Math.random()*this.maxLife;
-  }
-  for(let i=0;i<22;i++)strands.push(new Strand());
-
-  let t=0;
-  function draw(){
-    ctx.clearRect(0,0,W,H);t+=.01;
-    strands.forEach(s=>{
-      s.life+=s.speed;if(s.life>s.maxLife)s.reset();
-      const prog=s.life/s.maxLife;
-      const fade=prog<.15?prog/.15:prog>.78?(1-prog)/.22:1;
-      ctx.beginPath();
-      for(let i=0;i<=70;i++){
-        const pct=i/70,py=s.y+s.life*pct;
-        const wave=Math.sin(pct*s.freq*1000+s.phase+t)*s.amp*(1-pct*.4);
-        const px=s.x+wave;
-        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
-      }
-      ctx.strokeStyle=`rgba(255,255,255,${s.alpha*fade})`;
-      ctx.lineWidth=s.width;ctx.lineCap='round';ctx.stroke();
-    });
-    requestAnimationFrame(draw);
-  }
-  resize();window.addEventListener('resize',resize);draw();
-})();
+/* ── HAIR STRANDS ── */
+(function(){const canvas=document.getElementById('hairCanvas');const ctx=canvas.getContext('2d');let W,H,strands=[];function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}function Strand(){this.reset=function(){this.x=W*(.35+Math.random()*.7);this.y=-30;this.len=H*.45+Math.random()*H*.45;this.speed=.16+Math.random()*.2;this.amp=14+Math.random()*34;this.freq=.004+Math.random()*.006;this.phase=Math.random()*Math.PI*2;this.alpha=.025+Math.random()*.045;this.width=.5+Math.random()*1.1;this.life=0;this.maxLife=this.len/this.speed;};this.reset();this.life=Math.random()*this.maxLife;}for(let i=0;i<22;i++)strands.push(new Strand());let t=0;function draw(){ctx.clearRect(0,0,W,H);t+=.01;strands.forEach(s=>{s.life+=s.speed;if(s.life>s.maxLife)s.reset();const prog=s.life/s.maxLife;const fade=prog<.15?prog/.15:prog>.78?(1-prog)/.22:1;ctx.beginPath();for(let i=0;i<=70;i++){const pct=i/70,py=s.y+s.life*pct;const wave=Math.sin(pct*s.freq*1000+s.phase+t)*s.amp*(1-pct*.4);const px=s.x+wave;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}ctx.strokeStyle=`rgba(255,255,255,${s.alpha*fade})`;ctx.lineWidth=s.width;ctx.lineCap='round';ctx.stroke();});requestAnimationFrame(draw);}resize();window.addEventListener('resize',resize);draw();})();
 
 /* ── NAV ── */
 window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',scrollY>60);});
@@ -581,7 +375,10 @@ const DEF_TXT={heroSubtitle:'Peluquero Colorista · Villa del Parque',heroDesc:'
 const getSrv=()=>JSON.parse(localStorage.getItem('gc_services')||'null')||DEF_SRV;
 const getTxt=()=>Object.assign({},DEF_TXT,JSON.parse(localStorage.getItem('gc_texts')||'{}'));
 const getAppts=()=>JSON.parse(localStorage.getItem('gc_appointments')||'[]');
-const saveAppt=a=>{const all=getAppts();all.push(a);localStorage.setItem('gc_appointments',JSON.stringify(all));};
+const saveAppt=a=>{
+  const all=getAppts();all.push(a);localStorage.setItem('gc_appointments',JSON.stringify(all));
+  fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'add',appt:a})}).catch(()=>{});
+};
 
 function init(){
   const T=getTxt();
@@ -595,32 +392,13 @@ function init(){
   document.getElementById('foot-copy').textContent=T.footerText;
   renderSrvGrid();
 }
-function renderSrvGrid(){
-  document.getElementById('srv-grid').innerHTML=getSrv().map((s,i)=>`
-    <div class="srv-card" onclick="openModal(${s.id})">
-      <div class="sc-idx">0${i+1}</div>
-      <div class="srv-card-inner">
-        <div class="sc-name">${s.name}</div>
-        <div class="sc-dur">${s.duration} min</div>
-        <div class="sc-bottom">
-          <div><span class="sc-price-lbl">Desde</span><span class="sc-price">$${s.price.toLocaleString('es-AR')}</span></div>
-          <div class="sc-btn">→</div>
-        </div>
-      </div>
-    </div>`).join('');
-}
+function renderSrvGrid(){document.getElementById('srv-grid').innerHTML=getSrv().map((s,i)=>`<div class="srv-card" onclick="openModal(${s.id})"><div class="sc-idx">0${i+1}</div><div class="srv-card-inner"><div class="sc-name">${s.name}</div><div class="sc-dur">${s.duration} min</div><div class="sc-bottom"><div><span class="sc-price-lbl">Desde</span><span class="sc-price">$${s.price.toLocaleString('es-AR')}</span></div><div class="sc-btn">→</div></div></div></div>`).join('');}
 
 /* ── MODAL ── */
 let curStep=1,bk={},calY,calM;
 function openModal(preId=null){resetBk();if(preId)selSrv(preId);renderSopts();document.getElementById('moverlay').classList.add('open');document.body.style.overflow='hidden';goStep(1);}
 function closeModal(){document.getElementById('moverlay').classList.remove('open');document.body.style.overflow='';}
-function resetBk(){
-  bk={sid:null,sname:'',sprice:0,sdur:0,date:'',time:'',name:'',wa:'',email:'',notes:''};
-  document.getElementById('mSuccess').classList.remove('show');
-  document.getElementById('mbody').style.display='';document.getElementById('mfoot').style.display='';document.getElementById('msteps').style.display='';
-  ['iName','iWa','iEmail','iNotes'].forEach(id=>document.getElementById(id).value='');
-  const n=new Date();calY=n.getFullYear();calM=n.getMonth();
-}
+function resetBk(){bk={sid:null,sname:'',sprice:0,sdur:0,date:'',time:'',name:'',wa:'',email:'',notes:''};document.getElementById('mSuccess').classList.remove('show');document.getElementById('mbody').style.display='';document.getElementById('mfoot').style.display='';document.getElementById('msteps').style.display='';['iName','iWa','iEmail','iNotes'].forEach(id=>document.getElementById(id).value='');const n=new Date();calY=n.getFullYear();calM=n.getMonth();}
 function renderSopts(){document.getElementById('sopts').innerHTML=getSrv().map(s=>`<div class="s-opt ${bk.sid===s.id?'sel':''}" onclick="selSrv(${s.id})" id="opt${s.id}"><div><div class="so-name">${s.name}</div><div class="so-dur">${s.duration} min</div></div><div class="so-price">$${s.price.toLocaleString('es-AR')}</div></div>`).join('');}
 function selSrv(id){const s=getSrv().find(x=>x.id===id);if(!s)return;Object.assign(bk,{sid:s.id,sname:s.name,sprice:s.price,sdur:s.duration});document.querySelectorAll('.s-opt').forEach(e=>e.classList.remove('sel'));document.getElementById('opt'+id)?.classList.add('sel');updNext();}
 function goStep(n){document.querySelectorAll('.m-step').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.ms-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i+1<n)d.classList.add('done');else if(i+1===n)d.classList.add('active');});curStep=n;document.getElementById('step'+n).classList.add('active');document.getElementById('btnBack').disabled=n===1;document.getElementById('btnNext').textContent=n===4?'Confirmar →':'Continuar →';if(n===2)renderCal();if(n===4)renderCsum();updNext();document.getElementById('mbody').scrollTop=0;}
