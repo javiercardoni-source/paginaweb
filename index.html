@@ -352,7 +352,7 @@ footer{background:var(--bg2);padding:2.25rem 4rem;display:flex;align-items:cente
 
 <script>
 /* ── API ── */
-const API_URL='https://script.google.com/macros/s/AKfycbzCGCJPINq8_dBRQEUP-fPvlulHwxHkpnPaydFVbQQZPaY3d56FOzVjKdNChnwMRFwd/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbwLtv6-Ev1IKRPgvr8yfEhE4cRubGWpGp1nHAFwyUf78XYF_pxuJLCi55wFj-e0y80Bfg/exec';
 
 /* ── CURSOR ── */
 const CUR=document.getElementById('cur'),CUR2=document.getElementById('cur2');
@@ -378,7 +378,7 @@ const getAppts=()=>JSON.parse(localStorage.getItem('gc_appointments')||'[]');
 const saveAppt=a=>{
   const all=getAppts();all.push(a);localStorage.setItem('gc_appointments',JSON.stringify(all));
   // Usamos no-cors para evitar problemas de CORS con Apps Script
-  fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'add',appt:a})}).catch(()=>{});
+  fetch(API_URL+'?action=add&data='+encodeURIComponent(JSON.stringify(a)),{mode:'no-cors'}).catch(()=>{});
 };
 
 function init(){
